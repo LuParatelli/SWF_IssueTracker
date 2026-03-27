@@ -238,8 +238,8 @@ function App() {
             <div key={d.key} style={{background:"#ffffff18",borderLeft:"3px solid "+d.color,borderRadius:"8px",padding:"7px 12px",minWidth:"160px"}}>
               <div style={{color:d.color,fontWeight:700,fontSize:"11px",marginBottom:"5px"}}>{d.label}</div>
               <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
-                {isEditor?<input type="date" value={eventDates[d.key].start} onChange={e=>setEventDates(p=>({...p,[d.key]:{...p[d.key],start:e.target.value}}))} style={{background:"transparent",border:"none",borderBottom:"1px solid #ffffff55",color:"#fff",fontSize:"11px",outline:"none",width:"110px"}}/>:<span style={{color:"#fff",fontSize:"11px"}}>{eventDates[d.key].start}</span>}
-                {d.hasEnd&&<><span style={{color:"#ffffffaa"}}>→</span>{isEditor?<input type="date" value={eventDates[d.key].end} onChange={e=>setEventDates(p=>({...p,[d.key]:{...p[d.key],end:e.target.value}}))} style={{background:"transparent",border:"none",borderBottom:"1px solid #ffffff55",color:"#fff",fontSize:"11px",outline:"none",width:"110px"}}/>:<span style={{color:"#fff",fontSize:"11px"}}>{eventDates[d.key].end}</span>}</>}
+                {isEditor?<input type="date" value={eventDates[d.key].start} onChange={e=>setEventDates(p=>({...p,[d.key]:{...p[d.key],start:e.target.value}}))} style={{background:"transparent",border:"none",borderBottom:"1px solid #ffffff55",color:"#fff",fontSize:"11px",outline:"none",width:"110px"}}/>:<span style={{color:"#fff",fontSize:"11px"}}>{eventDates[d.key].start.split("-").reverse().join("/")}</span>}
+                {d.hasEnd&&<><span style={{color:"#ffffffaa"}}>→</span>{isEditor?<input type="date" value={eventDates[d.key].end} onChange={e=>setEventDates(p=>({...p,[d.key]:{...p[d.key],end:e.target.value}}))} style={{background:"transparent",border:"none",borderBottom:"1px solid #ffffff55",color:"#fff",fontSize:"11px",outline:"none",width:"110px"}}/>:<span style={{color:"#fff",fontSize:"11px"}}>{eventDates[d.key].end.split("-").reverse().join("/")}</span>}</>}
               </div>
             </div>
           ))}
