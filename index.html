@@ -1,1 +1,481 @@
-<!DOCTYPE html><html lang='pt-BR'><head><meta charset='UTF-8'/><title>SWF Issue Tracker V01</title><style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Inter,Arial,sans-serif;background:#f7f5f3;padding:24px;color:#1a1a1a;}table{width:100%;border-collapse:collapse;font-size:12px;}th{padding:11px 12px;color:#7a7572;font-weight:600;font-size:10px;text-align:left;letter-spacing:0.06em;white-space:nowrap;background:#f7f5f3;border-bottom:1px solid #e8e4e0;}.tb{padding:6px 18px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid transparent;background:#ffffff22;color:#ffffffaa;}.tb.active{background:#fff;color:#F45C6A;}.pn{display:none;}.pn.active{display:block;}</style></head><body><div style='background:linear-gradient(120deg,#F45C6A,#F28C48);border-radius:10px;padding:12px 20px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center'><div><div style='color:#fff;font-weight:700;font-size:14px'>Issue Tracker</div><div style='color:#ffffffaa;font-size:11px'>SWF 2026</div></div><div style='display:flex;gap:8px;align-items:center'><div style='background:#ffffff22;border:1px solid #ffffff44;border-radius:8px;padding:4px 14px;color:#fff;font-size:12px;font-weight:600'>V01</div><button class='tb active' onclick="st('tracker')" id='bt-tracker'>Issues</button><button class='tb' onclick="st('dashboard')" id='bt-dashboard'>Dashboard</button></div></div><div style='background:linear-gradient(120deg,#00A89D,#007a72);border-radius:10px;padding:18px 24px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px'><div><div style='font-size:20px;font-weight:800;color:#fff'>Sports &amp; Wellness Festival <span style="color:#F45C6A">2026</span></div><div style='color:#ffffffaa;font-size:12px;margin-top:4px'>Movmt · Evento Proprietário</div></div><div style='display:flex;gap:8px;flex-wrap:wrap'><div style='background:#ffffff18;border-left:3px solid #F28C48;border-radius:8px;padding:7px 12px'><div style='color:#F28C48;font-weight:700;font-size:11px;margin-bottom:4px'>Montagem</div><div style='color:#fff;font-size:11px'>2025-04-27 → 2025-05-11</div></div><div style='background:#ffffff18;border-left:3px solid #F45C6A;border-radius:8px;padding:7px 12px'><div style='color:#F45C6A;font-weight:700;font-size:11px;margin-bottom:4px'>Evento</div><div style='color:#fff;font-size:11px'>2025-05-12 → 2025-05-15</div></div><div style='background:#ffffff18;border-left:3px solid #fff;border-radius:8px;padding:7px 12px'><div style='color:#fff;font-weight:700;font-size:11px;margin-bottom:4px'>Design Freeze</div><div style='color:#fff;font-size:11px'>2025-04-17</div></div></div></div><div style='display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px'><div style='background:#fff;border:1px solid #e8e4e0;border-top:3px solid #1a1a1a;border-radius:10px;padding:14px 16px'><div style='color:#7a7572;font-size:10px;font-weight:600;letter-spacing:0.06em;margin-bottom:8px'>TOTAL ISSUES</div><div style='color:#1a1a1a;font-size:28px;font-weight:800'>4</div></div><div style='background:#fff;border:1px solid #e8e4e0;border-top:3px solid #F45C6A;border-radius:10px;padding:14px 16px'><div style='color:#7a7572;font-size:10px;font-weight:600;letter-spacing:0.06em;margin-bottom:8px'>AT RISK</div><div style='color:#F45C6A;font-size:28px;font-weight:800'>4</div></div><div style='background:#fff;border:1px solid #e8e4e0;border-top:3px solid #F28C48;border-radius:10px;padding:14px 16px'><div style='color:#7a7572;font-size:10px;font-weight:600;letter-spacing:0.06em;margin-bottom:8px'>ON TRACK</div><div style='color:#F28C48;font-size:28px;font-weight:800'>0</div></div><div style='background:#fff;border:1px solid #e8e4e0;border-top:3px solid #3b82f6;border-radius:10px;padding:14px 16px'><div style='color:#7a7572;font-size:10px;font-weight:600;letter-spacing:0.06em;margin-bottom:8px'>AGREED</div><div style='color:#3b82f6;font-size:28px;font-weight:800'>0</div></div><div style='background:#fff;border:1px solid #e8e4e0;border-top:3px solid #22c55e;border-radius:10px;padding:14px 16px'><div style='color:#7a7572;font-size:10px;font-weight:600;letter-spacing:0.06em;margin-bottom:8px'>COMPLETED</div><div style='color:#22c55e;font-size:28px;font-weight:800'>0</div></div><div style='background:#fff;border:1px solid #e8e4e0;border-top:3px solid #CCCBCA;border-radius:10px;padding:14px 16px'><div style='color:#7a7572;font-size:10px;font-weight:600;letter-spacing:0.06em;margin-bottom:8px'>CANCELLED</div><div style='color:#7a7572;font-size:28px;font-weight:800'>0</div></div></div><div id='pn-tracker' class='pn active'><div style='background:#fff;border-radius:12px;border:1px solid #e8e4e0;overflow-x:auto'><table><thead><tr><th>Nº</th><th>CATEGORIA</th><th>VENUE</th><th>DESCRIÇÃO</th><th>PRIORIDADE</th><th>RESPONSÁVEL</th><th>STATUS</th><th>DUE DATE</th><th>AÇÃO NECESSÁRIA</th></tr></thead><tbody><tr style='border-bottom:1px solid #e8e4e0;border-left:3px solid #ef4444;background:#fff'><td style='padding:10px 12px;color:#7a7572;font-weight:600'>#01</td><td style='padding:10px 12px;font-weight:700'>CAEX</td><td style='padding:10px 12px;color:#7a7572'>Todas</td><td style='padding:10px 12px'>SPIW está contratando solução CAEX. Qual plataforma adotar? Alinhar interferências técnicas entre equipes.</td><td style='padding:10px 12px'><span style='padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;background:#fee2e2;color:#ef4444'>HIGH</span></td><td style='padding:10px 12px;color:#7a7572'>—</td><td style='padding:10px 12px'><span style='padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#fee2e2;color:#ef4444'>● At Risk</span></td><td style='padding:10px 12px;color:#7a7572'>—</td><td style='padding:10px 12px;color:#7a7572'>Definir plataforma e convocar reunião de alinhamento técnico</td></tr><tr style='border-bottom:1px solid #e8e4e0;border-left:3px solid #ef4444;background:#f7f5f3'><td style='padding:10px 12px;color:#7a7572;font-weight:600'>#02</td><td style='padding:10px 12px;font-weight:700'>CAEX</td><td style='padding:10px 12px;color:#7a7572'>Todas</td><td style='padding:10px 12px'>Processo de aprovação dos projetos recebidos via CAEX: definir fluxo de aprovação e responsáveis.</td><td style='padding:10px 12px'><span style='padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;background:#fee2e2;color:#ef4444'>HIGH</span></td><td style='padding:10px 12px;color:#7a7572'>—</td><td style='padding:10px 12px'><span style='padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#fee2e2;color:#ef4444'>● At Risk</span></td><td style='padding:10px 12px;color:#7a7572'>—</td><td style='padding:10px 12px;color:#7a7572'>Mapear fluxo de aprovação e indicar responsável</td></tr><tr style='border-bottom:1px solid #e8e4e0;border-left:3px solid #ef4444;background:#fff'><td style='padding:10px 12px;color:#7a7572;font-weight:600'>#03</td><td style='padding:10px 12px;font-weight:700'>Documentação</td><td style='padding:10px 12px;color:#7a7572'>FAAP</td><td style='padding:10px 12px'>Quais documentos são necessários para aprovação da FAAP para autorização de montagem?</td><td style='padding:10px 12px'><span style='padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;background:#fce7f3;color:#db2777'>CRITICAL</span></td><td style='padding:10px 12px;color:#7a7572'>—</td><td style='padding:10px 12px'><span style='padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#fee2e2;color:#ef4444'>● At Risk</span></td><td style='padding:10px 12px;color:#7a7572'>—</td><td style='padding:10px 12px;color:#7a7572'>Levantar checklist documental junto à FAAP</td></tr><tr style='border-bottom:1px solid #e8e4e0;border-left:3px solid #ef4444;background:#f7f5f3'><td style='padding:10px 12px;color:#7a7572;font-weight:600'>#04</td><td style='padding:10px 12px;font-weight:700'>Suprimentos</td><td style='padding:10px 12px;color:#7a7572'>Todas</td><td style='padding:10px 12px'>Adotar modelo de trabalho para a Movmt ter acesso aos fornecedores contratados pelo SPIW.</td><td style='padding:10px 12px'><span style='padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;background:#fef9c3;color:#ca8a04'>MEDIUM</span></td><td style='padding:10px 12px;color:#7a7572'>—</td><td style='padding:10px 12px'><span style='padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#fee2e2;color:#ef4444'>● At Risk</span></td><td style='padding:10px 12px;color:#7a7572'>—</td><td style='padding:10px 12px;color:#7a7572'>Propor modelo de acesso e validar com o cliente</td></tr></tbody></table></div></div><div id='pn-dashboard' class='pn'><div style='display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px'><div style='background:#fff;border:1px solid #e8e4e0;border-radius:12px;padding:24px'><div style='color:#7a7572;font-size:11px;font-weight:600;margin-bottom:12px'>OVERALL PROGRESS</div><div style='font-size:48px;font-weight:800;line-height:1;margin-bottom:16px'>0%</div><div style='background:#e8e4e0;border-radius:999px;height:8px;margin-bottom:16px'><div style='width:0%;height:8px;background:linear-gradient(90deg,#00A89D,#F28C48);border-radius:999px'></div></div><div style='display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px'><div style='text-align:center'><div style='color:#ef4444;font-size:18px;font-weight:700'>4</div><div style='color:#7a7572;font-size:10px'>At Risk</div></div><div style='text-align:center'><div style='color:#f97316;font-size:18px;font-weight:700'>0</div><div style='color:#7a7572;font-size:10px'>On Track</div></div><div style='text-align:center'><div style='color:#3b82f6;font-size:18px;font-weight:700'>0</div><div style='color:#7a7572;font-size:10px'>Agreed</div></div><div style='text-align:center'><div style='color:#22c55e;font-size:18px;font-weight:700'>0</div><div style='color:#7a7572;font-size:10px'>Completed</div></div><div style='text-align:center'><div style='color:#9ca3af;font-size:18px;font-weight:700'>0</div><div style='color:#7a7572;font-size:10px'>Cancelled</div></div></div></div><div style='background:#fff;border:1px solid #e8e4e0;border-radius:12px;padding:24px'><div style='color:#7a7572;font-size:11px;font-weight:600;margin-bottom:12px'>TEAM MEMBERS</div><div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #F48DA055;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#F48DA0'></div><span style='font-size:12px'>Luiza (OP)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #F48DA055;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#F48DA0'></div><span style='font-size:12px'>Isabela (OP)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #F48DA055;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#F48DA0'></div><span style='font-size:12px'>Mafe (OP)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #F28C4855;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#F28C48'></div><span style='font-size:12px'>Ana Paula (PR)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #F28C4855;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#F28C48'></div><span style='font-size:12px'>Mari (PR)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #F45C6A55;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#F45C6A'></div><span style='font-size:12px'>Jarbas (Infra)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #F45C6A55;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#F45C6A'></div><span style='font-size:12px'>Ailton (Infra)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #00A89D55;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#00A89D'></div><span style='font-size:12px'>Simone (CO)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #00A89D55;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#00A89D'></div><span style='font-size:12px'>Carol (CO)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #00A89D55;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#00A89D'></div><span style='font-size:12px'>Lucas (CO)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #eab30855;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#eab308'></div><span style='font-size:12px'>Tamezawa (DO)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #eab30855;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#eab308'></div><span style='font-size:12px'>Ariel (CEO)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #6366f155;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#6366f1'></div><span style='font-size:12px'>Luiza (AT)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #a855f755;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#a855f7'></div><span style='font-size:12px'>Adriana (MKT)</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #CCCBCA55;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#CCCBCA'></div><span style='font-size:12px'>Patrocínio</span></div><div style='display:inline-flex;align-items:center;gap:6px;background:#f7f5f3;border:1px solid #CCCBCA55;border-radius:20px;padding:5px 12px;margin:4px'><div style='width:7px;height:7px;border-radius:50%;background:#CCCBCA'></div><span style='font-size:12px'>Outros</span></div></div></div></div><div style='display:grid;grid-template-columns:1fr 1fr;gap:14px'><div style='background:#fff;border:1px solid #e8e4e0;border-radius:12px;padding:24px'><div style='color:#7a7572;font-size:11px;font-weight:600;margin-bottom:16px'>STATUS DISTRIBUTION</div><div style='margin-bottom:10px'><div style='display:flex;justify-content:space-between;margin-bottom:4px'><span style='font-size:12px;font-weight:600'>At Risk</span><span style='font-size:12px;color:#7a7572'>4 (100%)</span></div><div style='background:#e8e4e0;border-radius:999px;height:6px'><div style='width:100%;height:100%;background:#ef4444;border-radius:999px'></div></div></div><div style='margin-bottom:10px'><div style='display:flex;justify-content:space-between;margin-bottom:4px'><span style='font-size:12px;font-weight:600'>On Track</span><span style='font-size:12px;color:#7a7572'>0 (0%)</span></div><div style='background:#e8e4e0;border-radius:999px;height:6px'><div style='width:0%;height:100%;background:#f97316;border-radius:999px'></div></div></div><div style='margin-bottom:10px'><div style='display:flex;justify-content:space-between;margin-bottom:4px'><span style='font-size:12px;font-weight:600'>Agreed</span><span style='font-size:12px;color:#7a7572'>0 (0%)</span></div><div style='background:#e8e4e0;border-radius:999px;height:6px'><div style='width:0%;height:100%;background:#3b82f6;border-radius:999px'></div></div></div><div style='margin-bottom:10px'><div style='display:flex;justify-content:space-between;margin-bottom:4px'><span style='font-size:12px;font-weight:600'>Completed</span><span style='font-size:12px;color:#7a7572'>0 (0%)</span></div><div style='background:#e8e4e0;border-radius:999px;height:6px'><div style='width:0%;height:100%;background:#22c55e;border-radius:999px'></div></div></div><div style='margin-bottom:10px'><div style='display:flex;justify-content:space-between;margin-bottom:4px'><span style='font-size:12px;font-weight:600'>Cancelled</span><span style='font-size:12px;color:#7a7572'>0 (0%)</span></div><div style='background:#e8e4e0;border-radius:999px;height:6px'><div style='width:0%;height:100%;background:#9ca3af;border-radius:999px'></div></div></div></div><div style='background:#fff;border:1px solid #e8e4e0;border-radius:12px;padding:24px'><div style='color:#7a7572;font-size:11px;font-weight:600;margin-bottom:16px'>MILESTONES</div><div style='border-left:2px solid #e8e4e0;padding-left:16px'><div style='display:flex;align-items:flex-start;gap:12px;margin-bottom:16px'><div style='width:12px;height:12px;border-radius:50%;background:#00A89D;margin-top:2px;flex-shrink:0'></div><div><div style='font-weight:600;font-size:13px'>Kickoff do Projeto</div><div style='color:#7a7572;font-size:11px;margin-top:2px'>2025-03-01</div></div></div><div style='display:flex;align-items:flex-start;gap:12px;margin-bottom:16px'><div style='width:12px;height:12px;border-radius:50%;background:#00A89D;margin-top:2px;flex-shrink:0'></div><div><div style='font-weight:600;font-size:13px'>Alinhamento de Venues</div><div style='color:#7a7572;font-size:11px;margin-top:2px'>2025-04-15</div></div></div><div style='display:flex;align-items:flex-start;gap:12px;margin-bottom:16px'><div style='width:12px;height:12px;border-radius:50%;background:#00A89D;margin-top:2px;flex-shrink:0'></div><div><div style='font-weight:600;font-size:13px'>Aprovações Documentais</div><div style='color:#7a7572;font-size:11px;margin-top:2px'>2025-05-30</div></div></div><div style='display:flex;align-items:flex-start;gap:12px;margin-bottom:16px'><div style='width:12px;height:12px;border-radius:50%;background:#00A89D;margin-top:2px;flex-shrink:0'></div><div><div style='font-weight:600;font-size:13px'>Festival SWF</div><div style='color:#7a7572;font-size:11px;margin-top:2px'>2025-07-20</div></div></div></div></div></div></div><div style='margin-top:20px;text-align:right;color:#CCCBCA;font-size:11px'>Exportado em 27/03/2026 · V01</div><script>function st(t){document.querySelectorAll('.pn').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tb').forEach(b=>b.classList.remove('active'));document.getElementById('pn-'+t).classList.add('active');document.getElementById('bt-'+t).classList.add('active');}</script><!-- BACKUP:eyJpc3N1ZXMiOlt7ImlkIjoxLCJjYXRlZ29yaWEiOiJDQUVYIiwidmVudWUiOiJUb2RhcyIsImRlc2NyaWNhbyI6IlNQSVcgZXN0w6EgY29udHJhdGFuZG8gc29sdcOnw6NvIENBRVguIFF1YWwgcGxhdGFmb3JtYSBhZG90YXI/IEFsaW5oYXIgaW50ZXJmZXLDqm5jaWFzIHTDqWNuaWNhcyBlbnRyZSBlcXVpcGVzLiIsInByaW9yaWRhZGUiOiJISUdIIiwicmVzcG9uc2F2ZWwiOiLigJQiLCJzdGF0dXMiOiJBdCBSaXNrIiwiZHVlRGF0ZSI6IiIsImFjYW8iOiJEZWZpbmlyIHBsYXRhZm9ybWEgZSBjb252b2NhciByZXVuacOjbyBkZSBhbGluaGFtZW50byB0w6ljbmljbyJ9LHsiaWQiOjIsImNhdGVnb3JpYSI6IkNBRVgiLCJ2ZW51ZSI6IlRvZGFzIiwiZGVzY3JpY2FvIjoiUHJvY2Vzc28gZGUgYXByb3Zhw6fDo28gZG9zIHByb2pldG9zIHJlY2ViaWRvcyB2aWEgQ0FFWDogZGVmaW5pciBmbHV4byBkZSBhcHJvdmHDp8OjbyBlIHJlc3BvbnPDoXZlaXMuIiwicHJpb3JpZGFkZSI6IkhJR0giLCJyZXNwb25zYXZlbCI6IuKAlCIsInN0YXR1cyI6IkF0IFJpc2siLCJkdWVEYXRlIjoiIiwiYWNhbyI6Ik1hcGVhciBmbHV4byBkZSBhcHJvdmHDp8OjbyBlIGluZGljYXIgcmVzcG9uc8OhdmVsIn0seyJpZCI6MywiY2F0ZWdvcmlhIjoiRG9jdW1lbnRhw6fDo28iLCJ2ZW51ZSI6IkZBQVAiLCJkZXNjcmljYW8iOiJRdWFpcyBkb2N1bWVudG9zIHPDo28gbmVjZXNzw6FyaW9zIHBhcmEgYXByb3Zhw6fDo28gZGEgRkFBUCBwYXJhIGF1dG9yaXphw6fDo28gZGUgbW9udGFnZW0/IiwicHJpb3JpZGFkZSI6IkNSSVRJQ0FMIiwicmVzcG9uc2F2ZWwiOiLigJQiLCJzdGF0dXMiOiJBdCBSaXNrIiwiZHVlRGF0ZSI6IiIsImFjYW8iOiJMZXZhbnRhciBjaGVja2xpc3QgZG9jdW1lbnRhbCBqdW50byDDoCBGQUFQIn0seyJpZCI6NCwiY2F0ZWdvcmlhIjoiU3VwcmltZW50b3MiLCJ2ZW51ZSI6IlRvZGFzIiwiZGVzY3JpY2FvIjoiQWRvdGFyIG1vZGVsbyBkZSB0cmFiYWxobyBwYXJhIGEgTW92bXQgdGVyIGFjZXNzbyBhb3MgZm9ybmVjZWRvcmVzIGNvbnRyYXRhZG9zIHBlbG8gU1BJVy4iLCJwcmlvcmlkYWRlIjoiTUVESVVNIiwicmVzcG9uc2F2ZWwiOiLigJQiLCJzdGF0dXMiOiJBdCBSaXNrIiwiZHVlRGF0ZSI6IiIsImFjYW8iOiJQcm9wb3IgbW9kZWxvIGRlIGFjZXNzbyBlIHZhbGlkYXIgY29tIG8gY2xpZW50ZSJ9XSwibWlsZXN0b25lcyI6W3siaWQiOjEsIm5hbWUiOiJLaWNrb2ZmIGRvIFByb2pldG8iLCJkYXRlIjoiMjAyNS0wMy0wMSJ9LHsiaWQiOjIsIm5hbWUiOiJBbGluaGFtZW50byBkZSBWZW51ZXMiLCJkYXRlIjoiMjAyNS0wNC0xNSJ9LHsiaWQiOjMsIm5hbWUiOiJBcHJvdmHDp8O1ZXMgRG9jdW1lbnRhaXMiLCJkYXRlIjoiMjAyNS0wNS0zMCJ9LHsiaWQiOjQsIm5hbWUiOiJGZXN0aXZhbCBTV0YiLCJkYXRlIjoiMjAyNS0wNy0yMCJ9XSwiZXZlbnREYXRlcyI6eyJtb250YWdlbSI6eyJzdGFydCI6IjIwMjUtMDQtMjciLCJlbmQiOiIyMDI1LTA1LTExIn0sImV2ZW50byI6eyJzdGFydCI6IjIwMjUtMDUtMTIiLCJlbmQiOiIyMDI1LTA1LTE1In0sImRlc2lnbkZyZWV6ZSI6eyJzdGFydCI6IjIwMjUtMDQtMTciLCJlbmQiOiIifX0sInZlcnNpb25OdW0iOiIwMSJ9 --></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>SWF Issue Tracker</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Inter, Arial, sans-serif; background: #f7f5f3; }
+  input, select { font-family: inherit; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useMemo, useEffect } = React;
+
+
+const SUPABASE_URL = "https://meostmczdzhxeuotwbex.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lb3N0bWN6ZHpoeGV1b3R3YmV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTM3ODgsImV4cCI6MjA5MDE2OTc4OH0.Mu6zIuwgzkPx7xjBnrO68ac8TbTFNSnMRgXxrwyRhZg";
+const EDIT_PASSWORD = "SWF2025#";
+
+const P = {
+  coral:"#F45C6A", rosa:"#F48DA0", laranja:"#F28C48", verde:"#00A89D",
+  cinza:"#CCCBCA", bg:"#f7f5f3", surface:"#ffffff", border:"#e8e4e0", text:"#1a1a1a", muted:"#7a7572",
+};
+const STATUS_LIST = ["At Risk","On Track","Agreed","Completed","Cancelled"];
+const STATUS_COLORS = {
+  "At Risk":  {bg:"#fee2e2",text:"#ef4444",dot:"#ef4444"},
+  "On Track": {bg:"#ffedd5",text:"#f97316",dot:"#f97316"},
+  "Agreed":   {bg:"#dbeafe",text:"#3b82f6",dot:"#3b82f6"},
+  "Completed":{bg:"#dcfce7",text:"#22c55e",dot:"#22c55e"},
+  "Cancelled":{bg:"#f3f4f6",text:"#9ca3af",dot:"#9ca3af"},
+};
+const PRIORITY_COLORS = {
+  "CRITICAL":{bg:"#fce7f3",text:"#db2777"},
+  "HIGH":    {bg:"#fee2e2",text:"#ef4444"},
+  "MEDIUM":  {bg:"#fef9c3",text:"#ca8a04"},
+  "LOW":     {bg:"#dcfce7",text:"#16a34a"},
+};
+const TEAM_MEMBERS = [
+  "—","Luiza (OP)","Isabela (OP)","Mafe (OP)","Ana Paula (PR)","Mari (PR)",
+  "Jarbas (Infra)","Ailton (Infra)","Simone (CO)","Carol (CO)","Lucas (CO)",
+  "Tamezawa (DO)","Ariel (CEO)","Luiza (AT)","Adriana (MKT)","Patrocínio","Outros"
+];
+const DEPT_COLORS = {OP:"#F48DA0",PR:"#F28C48",Infra:"#F45C6A",CO:"#00A89D",DO:"#eab308",CEO:"#eab308",AT:"#6366f1",MKT:"#a855f7"};
+const DEFAULT_ISSUES = [
+  {id:1,categoria:"CAEX",venue:"Todas",descricao:"SPIW está contratando solução CAEX. Qual plataforma adotar?",prioridade:"HIGH",responsavel:"—",status:"At Risk",dueDate:"",acao:"Definir plataforma e convocar reunião"},
+  {id:2,categoria:"CAEX",venue:"Todas",descricao:"Processo de aprovação dos projetos recebidos via CAEX.",prioridade:"HIGH",responsavel:"—",status:"At Risk",dueDate:"",acao:"Mapear fluxo de aprovação"},
+  {id:3,categoria:"Documentação",venue:"FAAP",descricao:"Quais documentos são necessários para aprovação da FAAP?",prioridade:"CRITICAL",responsavel:"—",status:"At Risk",dueDate:"",acao:"Levantar checklist documental"},
+  {id:4,categoria:"Suprimentos",venue:"Todas",descricao:"Adotar modelo de trabalho para acesso aos fornecedores.",prioridade:"MEDIUM",responsavel:"—",status:"At Risk",dueDate:"",acao:"Propor modelo de acesso"},
+];
+const DEFAULT_MILESTONES = [
+  {id:1,name:"Kickoff do Projeto",date:"2025-03-01"},
+  {id:2,name:"Alinhamento de Venues",date:"2025-04-15"},
+  {id:3,name:"Aprovações Documentais",date:"2025-05-30"},
+  {id:4,name:"Festival SWF",date:"2025-07-20"},
+];
+const DEFAULT_EVENT_DATES = {
+  montagem:{start:"2025-04-27",end:"2025-05-11"},
+  evento:{start:"2025-05-12",end:"2025-05-15"},
+  designFreeze:{start:"2025-04-17",end:""},
+};
+const emptyIssue = {categoria:"",venue:"",descricao:"",prioridade:"HIGH",responsavel:"—",status:"At Risk",dueDate:"",acao:""};
+const iSt = {background:P.surface,color:P.text,border:"1px solid "+P.border,borderRadius:"6px",padding:"5px 8px",fontSize:"12px",width:"100%"};
+
+const sbGet = async (key) => {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/swf_tracker?key=eq.${key}&select=value`, {
+      headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
+    });
+    const data = await res.json();
+    return data?.[0]?.value ? JSON.parse(data[0].value) : null;
+  } catch(e) { return null; }
+};
+
+const sbSet = async (key, value) => {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/swf_tracker`, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates"
+      },
+      body: JSON.stringify({ key, value: JSON.stringify(value), updated_at: new Date().toISOString() })
+    });
+  } catch(e) {}
+};
+
+const StatusPill = ({s}) => (
+  <span style={{display:"inline-flex",alignItems:"center",gap:"5px",padding:"3px 10px",borderRadius:"20px",fontSize:"11px",fontWeight:600,background:STATUS_COLORS[s]?.bg,color:STATUS_COLORS[s]?.text}}>
+    <span style={{width:"6px",height:"6px",borderRadius:"50%",background:STATUS_COLORS[s]?.dot,display:"inline-block"}}/>{s}
+  </span>
+);
+const PriorityPill = ({p}) => (
+  <span style={{padding:"3px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700,background:PRIORITY_COLORS[p]?.bg||"#f3f4f6",color:PRIORITY_COLORS[p]?.text||"#374151"}}>{p}</span>
+);
+
+function App() {
+  const [ready,setReady] = useState(false);
+  const [isEditor,setIsEditor] = useState(false);
+  const [showPassModal,setShowPassModal] = useState(false);
+  const [passInput,setPassInput] = useState("");
+  const [passError,setPassError] = useState(false);
+  const [issues,setIssues] = useState(DEFAULT_ISSUES);
+  const [milestones,setMilestones] = useState(DEFAULT_MILESTONES);
+  const [eventDates,setEventDates] = useState(DEFAULT_EVENT_DATES);
+  const [versionNum,setVersionNum] = useState("01");
+  const [tab,setTab] = useState("tracker");
+  const [search,setSearch] = useState("");
+  const [filterStatus,setFilter] = useState("Todos");
+  const [editingId,setEditingId] = useState(null);
+  const [editData,setEditData] = useState({});
+  const [showNew,setShowNew] = useState(false);
+  const [newIssue,setNewIssue] = useState(emptyIssue);
+  const [editingMilestone,setEditingMilestone] = useState(null);
+  const [savedMsg,setSavedMsg] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const [i,m,ed,v] = await Promise.all([
+        sbGet("issues"), sbGet("milestones"), sbGet("eventDates"), sbGet("version"),
+      ]);
+      if(i) setIssues(i);
+      if(m) setMilestones(m);
+      if(ed) setEventDates(ed);
+      if(v) setVersionNum(v);
+      setReady(true);
+    })();
+  },[]);
+
+  useEffect(() => { if(ready) sbSet("issues",issues); },[issues,ready]);
+  useEffect(() => { if(ready) sbSet("milestones",milestones); },[milestones,ready]);
+  useEffect(() => { if(ready) sbSet("eventDates",eventDates); },[eventDates,ready]);
+  useEffect(() => { if(ready) sbSet("version",versionNum); },[versionNum,ready]);
+
+  const flash = () => { setSavedMsg(true); setTimeout(()=>setSavedMsg(false),2000); };
+  const handleUnlock = () => {
+    if(passInput===EDIT_PASSWORD){ setIsEditor(true); setShowPassModal(false); setPassInput(""); setPassError(false); }
+    else setPassError(true);
+  };
+
+  const counts = useMemo(() => {
+    const c={total:issues.length};
+    STATUS_LIST.forEach(s=>c[s]=issues.filter(i=>i.status===s).length);
+    return c;
+  },[issues]);
+
+  const overallProgress = useMemo(() => !issues.length?0:Math.round((counts["Completed"]/issues.length)*100),[issues,counts]);
+  const pieData = useMemo(() => STATUS_LIST.map(s=>({name:s,value:counts[s]})).filter(d=>d.value>0),[counts]);
+  const upcomingDeadlines = useMemo(() => {
+    const today=new Date(), next30=new Date(today.getTime()+30*24*60*60*1000);
+    return issues.filter(i=>{const d=new Date(i.dueDate);return i.dueDate&&d>=today&&d<=next30&&i.status!=="Completed";}).sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate));
+  },[issues]);
+  const filtered = useMemo(() => issues.filter(i=>
+    (filterStatus==="Todos"||i.status===filterStatus)&&
+    (!search||[i.categoria,i.venue,i.descricao,i.acao,i.responsavel].some(f=>f.toLowerCase().includes(search.toLowerCase())))
+  ),[issues,search,filterStatus]);
+
+  const addIssue = () => { setIssues(p=>[...p,{...newIssue,id:Date.now()}]); setNewIssue(emptyIssue); setShowNew(false); flash(); };
+  const deleteIssue = id => { setIssues(p=>p.filter(i=>i.id!==id)); flash(); };
+  const startEdit = issue => { setEditingId(issue.id); setEditData({...issue}); };
+  const saveEdit = () => { setIssues(p=>p.map(i=>i.id===editingId?editData:i)); setEditingId(null); flash(); };
+  const cancelEdit = () => setEditingId(null);
+  const addMilestone = () => { const m={id:Date.now(),name:"Novo Marco",date:new Date().toISOString().split("T")[0]}; setMilestones(p=>[...p,m]); setEditingMilestone(m.id); };
+
+  const btnStyle = active => ({
+    display:"flex",alignItems:"center",gap:"5px",padding:"6px 14px",
+    borderRadius:"8px",fontSize:"12px",fontWeight:600,cursor:"pointer",
+    background:"#ffffff22",color:active?"#fff":"#ffffffaa",
+    border:"1.5px solid "+(active?"#fff":"transparent"),
+  });
+
+  if(!ready) return (
+    <div style={{background:P.bg,minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{textAlign:"center",color:P.muted,fontSize:"14px"}}>Conectando ao banco de dados…</div>
+    </div>
+  );
+
+  return (
+    <div style={{background:P.bg,minHeight:"100vh",padding:"24px",fontFamily:"Inter,sans-serif"}}>
+
+      {showPassModal&&(
+        <div style={{position:"fixed",inset:0,background:"#00000066",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          <div style={{background:P.surface,borderRadius:"14px",padding:"32px",width:"320px",boxShadow:"0 20px 60px #0003"}}>
+            <div style={{fontWeight:700,fontSize:"15px",color:P.text,marginBottom:"16px"}}>🔒 Modo Edição</div>
+            <p style={{color:P.muted,fontSize:"13px",marginBottom:"16px"}}>Digite a senha para habilitar edição:</p>
+            <input type="password" value={passInput} onChange={e=>{setPassInput(e.target.value);setPassError(false);}} onKeyDown={e=>e.key==="Enter"&&handleUnlock()} placeholder="Senha" style={{...iSt,marginBottom:"8px",fontSize:"14px",padding:"10px 12px"}} autoFocus/>
+            {passError&&<p style={{color:P.coral,fontSize:"12px",margin:"0 0 12px"}}>Senha incorreta.</p>}
+            <div style={{display:"flex",gap:"8px",marginTop:"8px"}}>
+              <button onClick={handleUnlock} style={{flex:1,background:P.verde,border:"none",color:"#fff",borderRadius:"8px",padding:"10px",fontSize:"13px",fontWeight:600,cursor:"pointer"}}>Entrar</button>
+              <button onClick={()=>{setShowPassModal(false);setPassInput("");setPassError(false);}} style={{flex:1,background:P.bg,border:"1px solid "+P.border,color:P.muted,borderRadius:"8px",padding:"10px",fontSize:"13px",fontWeight:600,cursor:"pointer"}}>Cancelar</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TOP BAR */}
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:"linear-gradient(120deg,"+P.coral+","+P.laranja+")",borderRadius:"10px",padding:"10px 20px",marginBottom:"10px"}}>
+        <div>
+          <div style={{color:"#fff",fontWeight:700,fontSize:"14px"}}>Issue Tracker</div>
+          <div style={{color:"#ffffffaa",fontSize:"11px"}}>SWF 2026</div>
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+          {savedMsg&&<span style={{color:"#fff",fontSize:"11px",background:"#ffffff22",borderRadius:"6px",padding:"3px 10px"}}>✓ Salvo</span>}
+          <button onClick={()=>isEditor?setIsEditor(false):setShowPassModal(true)} style={{display:"flex",alignItems:"center",gap:"5px",padding:"6px 12px",borderRadius:"8px",fontSize:"12px",fontWeight:600,cursor:"pointer",background:isEditor?"#ffffff33":"#ffffff22",color:"#fff",border:"1.5px solid "+(isEditor?"#fff":"transparent")}}>
+            {isEditor?"🔓 Editando":"🔒 Somente leitura"}
+          </button>
+          <div style={{display:"flex",alignItems:"center",background:"#ffffff22",border:"1px solid #ffffff44",borderRadius:"8px",padding:"4px 10px"}}>
+            <span style={{color:"#ffffffcc",fontSize:"12px",fontWeight:600}}>V</span>
+            <input value={versionNum} onChange={e=>isEditor&&setVersionNum(e.target.value.replace(/\D/g,""))} readOnly={!isEditor} style={{background:"transparent",border:"none",color:"#fff",fontSize:"12px",fontWeight:600,width:"24px",outline:"none"}} maxLength={2}/>
+          </div>
+          <button onClick={()=>setTab("tracker")} style={btnStyle(tab==="tracker")}>Issues</button>
+          <button onClick={()=>setTab("dashboard")} style={btnStyle(tab==="dashboard")}>Dashboard</button>
+        </div>
+      </div>
+
+      {!isEditor&&(
+        <div style={{background:P.laranja+"18",border:"1px solid "+P.laranja+"44",borderRadius:"8px",padding:"8px 16px",marginBottom:"10px"}}>
+          <span style={{color:P.laranja,fontSize:"12px",fontWeight:600}}>👁 Modo visualização — clique em "Somente leitura" para editar</span>
+        </div>
+      )}
+
+      {/* EVENT BANNER */}
+      <div style={{background:"linear-gradient(120deg,"+P.verde+",#007a72)",borderRadius:"10px",padding:"18px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"12px",marginBottom:"20px"}}>
+        <div>
+          <div style={{fontSize:"20px",fontWeight:800,color:"#fff"}}>Sports & Wellness Festival <span style={{color:P.coral}}>2026</span></div>
+          <div style={{color:"#ffffffaa",fontSize:"12px",marginTop:"4px"}}>Movmt · Evento Proprietário</div>
+        </div>
+        <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
+          {[{label:"Montagem",key:"montagem",color:P.laranja,hasEnd:true},{label:"Evento",key:"evento",color:P.coral,hasEnd:true},{label:"Design Freeze",key:"designFreeze",color:"#fff",hasEnd:false}].map(d=>(
+            <div key={d.key} style={{background:"#ffffff18",borderLeft:"3px solid "+d.color,borderRadius:"8px",padding:"7px 12px",minWidth:"160px"}}>
+              <div style={{color:d.color,fontWeight:700,fontSize:"11px",marginBottom:"5px"}}>{d.label}</div>
+              <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
+                {isEditor?<input type="date" value={eventDates[d.key].start} onChange={e=>setEventDates(p=>({...p,[d.key]:{...p[d.key],start:e.target.value}}))} style={{background:"transparent",border:"none",borderBottom:"1px solid #ffffff55",color:"#fff",fontSize:"11px",outline:"none",width:"110px"}}/>:<span style={{color:"#fff",fontSize:"11px"}}>{eventDates[d.key].start}</span>}
+                {d.hasEnd&&<><span style={{color:"#ffffffaa"}}>→</span>{isEditor?<input type="date" value={eventDates[d.key].end} onChange={e=>setEventDates(p=>({...p,[d.key]:{...p[d.key],end:e.target.value}}))} style={{background:"transparent",border:"none",borderBottom:"1px solid #ffffff55",color:"#fff",fontSize:"11px",outline:"none",width:"110px"}}/>:<span style={{color:"#fff",fontSize:"11px"}}>{eventDates[d.key].end}</span>}</>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* SUMMARY CARDS */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:"10px",marginBottom:"20px"}}>
+        {[
+          {label:"TOTAL ISSUES",value:counts.total,color:P.text,accent:"#1a1a1a"},
+          {label:"AT RISK",value:counts["At Risk"],color:P.coral,accent:P.coral,pct:counts.total?Math.round(counts["At Risk"]/counts.total*100):0},
+          {label:"ON TRACK",value:counts["On Track"],color:P.laranja,accent:P.laranja,pct:counts.total?Math.round(counts["On Track"]/counts.total*100):0},
+          {label:"AGREED",value:counts["Agreed"],color:"#3b82f6",accent:"#3b82f6",pct:counts.total?Math.round(counts["Agreed"]/counts.total*100):0},
+          {label:"COMPLETED",value:counts["Completed"],color:"#22c55e",accent:"#22c55e",pct:counts.total?Math.round(counts["Completed"]/counts.total*100):0},
+          {label:"CANCELLED",value:counts["Cancelled"],color:P.muted,accent:P.cinza,pct:counts.total?Math.round(counts["Cancelled"]/counts.total*100):0},
+        ].map(c=>(
+          <div key={c.label} style={{background:P.surface,border:"1px solid "+P.border,borderTop:"3px solid "+c.accent,borderRadius:"10px",padding:"14px 16px"}}>
+            <div style={{color:P.muted,fontSize:"10px",fontWeight:600,letterSpacing:"0.06em",marginBottom:"8px"}}>{c.label}</div>
+            <div style={{color:c.color,fontSize:"28px",fontWeight:800,lineHeight:1}}>{c.value}</div>
+            {c.pct!==undefined&&<div style={{color:P.cinza,fontSize:"11px",marginTop:"4px"}}>{c.pct}%</div>}
+          </div>
+        ))}
+      </div>
+
+      {tab==="tracker"?(
+        <div>
+          <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"14px",flexWrap:"wrap"}}>
+            <div style={{position:"relative",flex:1,minWidth:"200px"}}>
+              <span style={{position:"absolute",left:"10px",top:"50%",transform:"translateY(-50%)",color:P.muted}}>🔍</span>
+              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar issue, categoria, venue, ação..." style={{...iSt,paddingLeft:"30px",borderRadius:"8px",width:"100%"}}/>
+            </div>
+            {["Todos",...STATUS_LIST].map(s=>(
+              <button key={s} onClick={()=>setFilter(s)} style={{padding:"6px 14px",borderRadius:"20px",fontSize:"12px",fontWeight:600,cursor:"pointer",background:filterStatus===s?(s==="Todos"?P.text:STATUS_COLORS[s]?.dot):P.surface,color:filterStatus===s?"#fff":P.muted,border:"1px solid "+(filterStatus===s?"transparent":P.border)}}>{s}</button>
+            ))}
+            {isEditor&&<button onClick={()=>setShowNew(true)} style={{display:"flex",alignItems:"center",gap:"5px",background:P.verde,border:"none",color:"#fff",borderRadius:"8px",padding:"6px 14px",fontSize:"12px",fontWeight:600,cursor:"pointer"}}>+ Novo Issue</button>}
+          </div>
+          <div style={{background:P.surface,borderRadius:"12px",border:"1px solid "+P.border,overflowX:"auto"}}>
+            <table style={{width:"100%",borderCollapse:"collapse",fontSize:"12px"}}>
+              <thead>
+                <tr style={{borderBottom:"1px solid "+P.border,background:P.bg}}>
+                  {["Nº","CATEGORIA","VENUE","DESCRIÇÃO","PRIORIDADE","RESPONSÁVEL","STATUS","DUE DATE","AÇÃO NECESSÁRIA",isEditor?"":null].filter(h=>h!==null).map(h=>(
+                    <th key={h} style={{padding:"11px 12px",color:P.muted,fontWeight:600,fontSize:"10px",textAlign:"left",letterSpacing:"0.06em",whiteSpace:"nowrap"}}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {isEditor&&showNew&&(
+                  <tr style={{borderBottom:"1px solid "+P.border,background:P.verde+"08"}}>
+                    <td style={{padding:"8px 12px",color:P.muted}}>#{String(issues.length+1).padStart(2,"0")}</td>
+                    {[
+                      <input style={iSt} value={newIssue.categoria} onChange={e=>setNewIssue({...newIssue,categoria:e.target.value})} placeholder="Categoria"/>,
+                      <input style={iSt} value={newIssue.venue} onChange={e=>setNewIssue({...newIssue,venue:e.target.value})} placeholder="Venue"/>,
+                      <input style={iSt} value={newIssue.descricao} onChange={e=>setNewIssue({...newIssue,descricao:e.target.value})} placeholder="Descrição"/>,
+                      <select style={iSt} value={newIssue.prioridade} onChange={e=>setNewIssue({...newIssue,prioridade:e.target.value})}>{["CRITICAL","HIGH","MEDIUM","LOW"].map(p=><option key={p}>{p}</option>)}</select>,
+                      <select style={iSt} value={newIssue.responsavel} onChange={e=>setNewIssue({...newIssue,responsavel:e.target.value})}>{TEAM_MEMBERS.map(m=><option key={m}>{m}</option>)}</select>,
+                      <select style={iSt} value={newIssue.status} onChange={e=>setNewIssue({...newIssue,status:e.target.value})}>{STATUS_LIST.map(s=><option key={s}>{s}</option>)}</select>,
+                      <input type="date" style={iSt} value={newIssue.dueDate} onChange={e=>setNewIssue({...newIssue,dueDate:e.target.value})}/>,
+                      <input style={iSt} value={newIssue.acao} onChange={e=>setNewIssue({...newIssue,acao:e.target.value})} placeholder="Ação necessária"/>,
+                    ].map((el,i)=><td key={i} style={{padding:"5px"}}>{el}</td>)}
+                    <td style={{padding:"5px"}}><div style={{display:"flex",gap:"5px"}}>
+                      <button onClick={addIssue} style={{background:P.verde,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:"#fff"}}>✓</button>
+                      <button onClick={()=>setShowNew(false)} style={{background:P.border,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:P.text}}>✕</button>
+                    </div></td>
+                  </tr>
+                )}
+                {filtered.map((issue,idx)=>{
+                  const isEdit=isEditor&&editingId===issue.id;
+                  return (
+                    <tr key={issue.id} style={{borderBottom:"1px solid "+P.border,borderLeft:"3px solid "+(STATUS_COLORS[issue.status]?.dot||P.border),background:idx%2===0?P.surface:P.bg}}>
+                      <td style={{padding:"12px",color:P.muted,fontWeight:600,whiteSpace:"nowrap"}}>#{String(idx+1).padStart(2,"0")}</td>
+                      {isEdit?(
+                        <>
+                          {[
+                            <input style={iSt} value={editData.categoria} onChange={e=>setEditData({...editData,categoria:e.target.value})}/>,
+                            <input style={iSt} value={editData.venue} onChange={e=>setEditData({...editData,venue:e.target.value})}/>,
+                            <input style={iSt} value={editData.descricao} onChange={e=>setEditData({...editData,descricao:e.target.value})}/>,
+                            <select style={iSt} value={editData.prioridade} onChange={e=>setEditData({...editData,prioridade:e.target.value})}>{["CRITICAL","HIGH","MEDIUM","LOW"].map(p=><option key={p}>{p}</option>)}</select>,
+                            <select style={iSt} value={editData.responsavel} onChange={e=>setEditData({...editData,responsavel:e.target.value})}>{TEAM_MEMBERS.map(m=><option key={m}>{m}</option>)}</select>,
+                            <select style={iSt} value={editData.status} onChange={e=>setEditData({...editData,status:e.target.value})}>{STATUS_LIST.map(s=><option key={s}>{s}</option>)}</select>,
+                            <input type="date" style={iSt} value={editData.dueDate} onChange={e=>setEditData({...editData,dueDate:e.target.value})}/>,
+                            <input style={iSt} value={editData.acao} onChange={e=>setEditData({...editData,acao:e.target.value})}/>,
+                          ].map((el,i)=><td key={i} style={{padding:"5px"}}>{el}</td>)}
+                          <td style={{padding:"5px"}}><div style={{display:"flex",gap:"5px"}}>
+                            <button onClick={saveEdit} style={{background:P.verde,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:"#fff"}}>✓</button>
+                            <button onClick={cancelEdit} style={{background:P.border,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:P.text}}>✕</button>
+                          </div></td>
+                        </>
+                      ):(
+                        <>
+                          <td style={{padding:"12px",color:P.text,fontWeight:700}}>{issue.categoria}</td>
+                          <td style={{padding:"12px",color:P.muted}}>{issue.venue}</td>
+                          <td style={{padding:"12px",color:P.text,maxWidth:"240px"}}>{issue.descricao}</td>
+                          <td style={{padding:"12px"}}><PriorityPill p={issue.prioridade}/></td>
+                          <td style={{padding:"12px",color:P.muted,whiteSpace:"nowrap"}}>{issue.responsavel}</td>
+                          <td style={{padding:"12px"}}><StatusPill s={issue.status}/></td>
+                          <td style={{padding:"12px",color:P.muted,whiteSpace:"nowrap"}}>{issue.dueDate||"—"}</td>
+                          <td style={{padding:"12px",color:P.muted,maxWidth:"180px"}}>{issue.acao}</td>
+                          {isEditor&&<td style={{padding:"12px"}}><div style={{display:"flex",gap:"8px"}}>
+                            <button onClick={()=>startEdit(issue)} style={{background:"none",border:"none",cursor:"pointer",color:P.muted}}>✏️</button>
+                            <button onClick={()=>deleteIssue(issue.id)} style={{background:"none",border:"none",cursor:"pointer",color:P.coral}}>🗑</button>
+                          </div></td>}
+                        </>
+                      )}
+                    </tr>
+                  );
+                })}
+                {filtered.length===0&&<tr><td colSpan={10} style={{padding:"40px",textAlign:"center",color:P.muted}}>Nenhum issue encontrado.</td></tr>}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ):(
+        <div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px",marginBottom:"14px"}}>
+            <div style={{background:P.surface,border:"1px solid "+P.border,borderRadius:"12px",padding:"24px"}}>
+              <p style={{color:P.muted,fontSize:"11px",fontWeight:600,margin:"0 0 12px",letterSpacing:"0.06em"}}>OVERALL PROGRESS</p>
+              <div style={{display:"flex",alignItems:"flex-end",gap:"12px",marginBottom:"16px"}}>
+                <span style={{color:P.text,fontSize:"48px",fontWeight:800,lineHeight:1}}>{overallProgress}%</span>
+                <span style={{color:P.muted,fontSize:"13px",marginBottom:"6px"}}>{counts["Completed"]} / {counts.total} completed</span>
+              </div>
+              <div style={{background:P.border,borderRadius:"999px",height:"8px",overflow:"hidden"}}>
+                <div style={{width:overallProgress+"%",height:"100%",background:"linear-gradient(90deg,"+P.verde+","+P.laranja+")",borderRadius:"999px"}}/>
+              </div>
+              <div style={{display:"flex",justifyContent:"space-between",marginTop:"16px",flexWrap:"wrap",gap:"8px"}}>
+                {STATUS_LIST.map(s=>(
+                  <div key={s} style={{textAlign:"center"}}>
+                    <div style={{color:STATUS_COLORS[s].dot,fontSize:"18px",fontWeight:700}}>{counts[s]}</div>
+                    <div style={{color:P.muted,fontSize:"10px",marginTop:"2px"}}>{s}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{background:P.surface,border:"1px solid "+P.border,borderRadius:"12px",padding:"24px",overflowY:"auto",maxHeight:"280px"}}>
+              <p style={{color:P.muted,fontSize:"11px",fontWeight:600,margin:"0 0 12px",letterSpacing:"0.06em"}}>TEAM MEMBERS</p>
+              <div style={{display:"flex",flexWrap:"wrap",gap:"8px"}}>
+                {TEAM_MEMBERS.filter(m=>m!=="—").map(m=>{
+                  const dept=m.match(/\((.+)\)/)?.[1]||"";
+                  const col=m==="Outros"?P.cinza:(DEPT_COLORS[dept]||P.cinza);
+                  return <div key={m} style={{display:"flex",alignItems:"center",gap:"6px",background:P.bg,border:"1px solid "+col+"55",borderRadius:"20px",padding:"5px 12px"}}>
+                    <div style={{width:"7px",height:"7px",borderRadius:"50%",background:col}}/>
+                    <span style={{color:P.text,fontSize:"12px"}}>{m}</span>
+                  </div>;
+                })}
+              </div>
+            </div>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"14px"}}>
+            <div style={{background:P.surface,border:"1px solid "+P.border,borderRadius:"12px",padding:"24px"}}>
+              <p style={{color:P.muted,fontSize:"11px",fontWeight:600,margin:"0 0 12px",letterSpacing:"0.06em"}}>STATUS DISTRIBUTION</p>
+              {counts.total===0?<p style={{color:P.muted}}>Nenhum issue.</p>:(
+                <div>
+                  {STATUS_LIST.map(s=>{
+                    const val=counts[s]||0;
+                    const pct=counts.total?Math.round(val/counts.total*100):0;
+                    return (
+                      <div key={s} style={{marginBottom:"12px"}}>
+                        <div style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
+                          <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+                            <div style={{width:"8px",height:"8px",borderRadius:"50%",background:STATUS_COLORS[s]?.dot}}/>
+                            <span style={{fontSize:"12px",color:P.text,fontWeight:600}}>{s}</span>
+                          </div>
+                          <span style={{fontSize:"12px",color:P.muted}}>{val} ({pct}%)</span>
+                        </div>
+                        <div style={{background:P.border,borderRadius:"999px",height:"6px"}}>
+                          <div style={{width:pct+"%",height:"100%",background:STATUS_COLORS[s]?.dot,borderRadius:"999px",transition:"width 0.3s"}}/>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+            <div style={{background:P.surface,border:"1px solid "+P.border,borderRadius:"12px",padding:"24px"}}>
+              <p style={{color:P.muted,fontSize:"11px",fontWeight:600,margin:"0 0 12px",letterSpacing:"0.06em"}}>UPCOMING DEADLINES (30 dias)</p>
+              {upcomingDeadlines.length===0?<p style={{color:P.muted,fontSize:"13px"}}>Nenhum prazo próximo.</p>:
+                <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                  {upcomingDeadlines.map(i=>(
+                    <div key={i.id} style={{background:P.bg,borderRadius:"8px",padding:"10px 12px",borderLeft:"3px solid "+(STATUS_COLORS[i.status]?.dot)}}>
+                      <div style={{color:P.text,fontSize:"12px",fontWeight:600}}>{i.categoria}</div>
+                      <div style={{color:P.muted,fontSize:"11px",marginTop:"2px"}}>{i.descricao.slice(0,60)}…</div>
+                      <div style={{display:"flex",justifyContent:"space-between",marginTop:"6px",alignItems:"center"}}>
+                        <span style={{color:P.muted,fontSize:"11px"}}>📅 {i.dueDate}</span>
+                        <StatusPill s={i.status}/>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              }
+            </div>
+            <div style={{background:P.surface,border:"1px solid "+P.border,borderRadius:"12px",padding:"24px"}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"16px"}}>
+                <p style={{color:P.muted,fontSize:"11px",fontWeight:600,margin:0,letterSpacing:"0.06em"}}>MILESTONES</p>
+                {isEditor&&<button onClick={addMilestone} style={{background:P.verde,border:"none",color:"#fff",borderRadius:"6px",padding:"4px 10px",fontSize:"11px",fontWeight:600,cursor:"pointer"}}>+ Adicionar</button>}
+              </div>
+              <div style={{position:"relative",paddingLeft:"20px"}}>
+                <div style={{position:"absolute",left:"7px",top:0,bottom:0,width:"2px",background:P.border}}/>
+                {milestones.map(m=>{
+                  const past=new Date(m.date)<new Date();
+                  const isEditM=isEditor&&editingMilestone===m.id;
+                  return (
+                    <div key={m.id} style={{position:"relative",marginBottom:"16px"}}>
+                      <div style={{position:"absolute",left:"-17px",top:"3px",width:"12px",height:"12px",borderRadius:"50%",background:past?P.verde:P.border,border:"2px solid "+P.surface}}/>
+                      {isEditM?(
+                        <div style={{display:"flex",flexDirection:"column",gap:"4px"}}>
+                          <input value={m.name} onChange={e=>setMilestones(p=>p.map(x=>x.id===m.id?{...x,name:e.target.value}:x))} style={{...iSt,fontWeight:600}}/>
+                          <input type="date" value={m.date} onChange={e=>setMilestones(p=>p.map(x=>x.id===m.id?{...x,date:e.target.value}:x))} style={iSt}/>
+                          <div style={{display:"flex",gap:"5px",marginTop:"2px"}}>
+                            <button onClick={()=>{setEditingMilestone(null);flash();}} style={{background:P.verde,border:"none",borderRadius:"5px",padding:"3px 10px",cursor:"pointer",color:"#fff",fontSize:"11px"}}>✓ OK</button>
+                            <button onClick={()=>{setMilestones(p=>p.filter(x=>x.id!==m.id));flash();}} style={{background:P.coral,border:"none",borderRadius:"5px",padding:"3px 10px",cursor:"pointer",color:"#fff",fontSize:"11px"}}>Apagar</button>
+                          </div>
+                        </div>
+                      ):(
+                        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+                          <div>
+                            <div style={{color:P.text,fontSize:"12px",fontWeight:600}}>{m.name}</div>
+                            <div style={{color:past?P.muted:P.verde,fontSize:"11px",marginTop:"2px"}}>{m.date}</div>
+                          </div>
+                          {isEditor&&<div style={{display:"flex",gap:"4px"}}>
+                            <button onClick={()=>setEditingMilestone(m.id)} style={{background:"none",border:"none",cursor:"pointer",color:P.muted}}>✏️</button>
+                            <button onClick={()=>{setMilestones(p=>p.filter(x=>x.id!==m.id));flash();}} style={{background:"none",border:"none",cursor:"pointer",color:P.coral}}>🗑</button>
+                          </div>}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.render(<App/>, document.getElementById("root"));
+</script>
+</body>
+</html>
