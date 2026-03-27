@@ -335,7 +335,7 @@ function App() {
                           <td style={{padding:"12px"}}><PriorityPill p={issue.prioridade}/></td>
                           <td style={{padding:"12px",color:P.muted,whiteSpace:"nowrap"}}>{issue.responsavel}</td>
                           <td style={{padding:"12px"}}><StatusPill s={issue.status}/></td>
-                          <td style={{padding:"12px",color:P.muted,whiteSpace:"nowrap"}}>{issue.dueDate||"—"}</td>
+                          <td style={{padding:"12px",color:P.muted,whiteSpace:"nowrap"}}>{issue.dueDate?issue.dueDate.split("-").reverse().join("/"):"—"}</td>
                           <td style={{padding:"12px",color:P.muted,maxWidth:"180px"}}>{issue.acao}</td>
                           {isEditor&&<td style={{padding:"12px"}}><div style={{display:"flex",gap:"8px"}}>
                             <button onClick={()=>startEdit(issue)} style={{background:"none",border:"none",cursor:"pointer",color:P.muted}}>✏️</button>
@@ -421,7 +421,7 @@ function App() {
                       <div style={{color:P.text,fontSize:"12px",fontWeight:600}}>{i.categoria}</div>
                       <div style={{color:P.muted,fontSize:"11px",marginTop:"2px"}}>{i.descricao.slice(0,60)}…</div>
                       <div style={{display:"flex",justifyContent:"space-between",marginTop:"6px",alignItems:"center"}}>
-                        <span style={{color:P.muted,fontSize:"11px"}}>📅 {i.dueDate}</span>
+                        <span style={{color:P.muted,fontSize:"11px"}}>📅 {i.dueDate.split("-").reverse().join("/")}</span>
                         <StatusPill s={i.status}/>
                       </div>
                     </div>
@@ -455,7 +455,7 @@ function App() {
                         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
                           <div>
                             <div style={{color:P.text,fontSize:"12px",fontWeight:600}}>{m.name}</div>
-                            <div style={{color:past?P.muted:P.verde,fontSize:"11px",marginTop:"2px"}}>{m.date}</div>
+                            <div style={{color:past?P.muted:P.verde,fontSize:"11px",marginTop:"2px"}}>{m.date.split("-").reverse().join("/")}</div>
                           </div>
                           {isEditor&&<div style={{display:"flex",gap:"4px"}}>
                             <button onClick={()=>setEditingMilestone(m.id)} style={{background:"none",border:"none",cursor:"pointer",color:P.muted}}>✏️</button>
