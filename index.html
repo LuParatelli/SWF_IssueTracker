@@ -3,15 +3,16 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>SWF Issue Tracker</title>
+<title>SWM Issue Tracker</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Inter, Arial, sans-serif; background: #f7f5f3; }
-  input, select { font-family: inherit; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Inter, Arial, sans-serif; background: #f7f5f3; }
+input, select { font-family: inherit; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
 </style>
 </head>
 <body>
@@ -19,10 +20,10 @@
 <script type="text/babel">
 const { useState, useMemo, useEffect } = React;
 
-
 const SUPABASE_URL = "https://meostmczdzhxeuotwbex.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1lb3N0bWN6ZHpoeGV1b3R3YmV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1OTM3ODgsImV4cCI6MjA5MDE2OTc4OH0.Mu6zIuwgzkPx7xjBnrO68ac8TbTFNSnMRgXxrwyRhZg";
-const EDIT_PASSWORD = "SWF2025#";
+const EDIT_PASSWORD = "Movmt";
+const VIEW_PASSWORD = "SWM2026#";
 
 const P = {
   coral:"#F45C6A", rosa:"#F48DA0", laranja:"#F28C48", verde:"#00A89D",
@@ -48,47 +49,53 @@ const TEAM_MEMBERS = [
   "Tamezawa (DO)","Ariel (CEO)","Luiza (AT)","Adriana (MKT)","Patrocínio","Outros"
 ];
 const DEPT_COLORS = {OP:"#F48DA0",PR:"#F28C48",Infra:"#F45C6A",CO:"#00A89D",DO:"#eab308",CEO:"#eab308",AT:"#6366f1",MKT:"#a855f7"};
+const ISSUE_CATS = ["Arquitetura","Produção","Marketing","Atendimento","Comercial"];
+const CRONOGRAMA_CATS = ["Arquitetura","Produção","Marketing","Atendimento","Comercial"];
+const CAT_COLORS = {
+  "Arquitetura":"#6366f1","Produção":"#F28C48","Marketing":"#F48DA0",
+  "Atendimento":"#00A89D","Comercial":"#eab308"
+};
+
 const DEFAULT_ISSUES = [
-  {id:1,categoria:"CAEX",venue:"Todas",descricao:"SPIW está contratando solução CAEX. Qual plataforma adotar?",prioridade:"HIGH",responsavel:"—",status:"At Risk",dueDate:"",acao:"Definir plataforma e convocar reunião"},
-  {id:2,categoria:"CAEX",venue:"Todas",descricao:"Processo de aprovação dos projetos recebidos via CAEX.",prioridade:"HIGH",responsavel:"—",status:"At Risk",dueDate:"",acao:"Mapear fluxo de aprovação"},
-  {id:3,categoria:"Documentação",venue:"FAAP",descricao:"Quais documentos são necessários para aprovação da FAAP?",prioridade:"CRITICAL",responsavel:"—",status:"At Risk",dueDate:"",acao:"Levantar checklist documental"},
-  {id:4,categoria:"Suprimentos",venue:"Todas",descricao:"Adotar modelo de trabalho para acesso aos fornecedores.",prioridade:"MEDIUM",responsavel:"—",status:"At Risk",dueDate:"",acao:"Propor modelo de acesso"},
+  {id:1,categoria:"Arquitetura",venue:"Todas",descricao:"SPIW está contratando solução CAEX. Qual plataforma adotar?",prioridade:"HIGH",responsavel:"—",status:"At Risk",dueDate:"",acao:"Definir plataforma e convocar reunião"},
+  {id:2,categoria:"Produção",venue:"Todas",descricao:"Processo de aprovação dos projetos recebidos via CAEX.",prioridade:"HIGH",responsavel:"—",status:"At Risk",dueDate:"",acao:"Mapear fluxo de aprovação"},
+  {id:3,categoria:"Arquitetura",venue:"FAAP",descricao:"Quais documentos são necessários para aprovação da FAAP?",prioridade:"CRITICAL",responsavel:"—",status:"At Risk",dueDate:"",acao:"Levantar checklist documental"},
+  {id:4,categoria:"Comercial",venue:"Todas",descricao:"Adotar modelo de trabalho para acesso aos fornecedores.",prioridade:"MEDIUM",responsavel:"—",status:"At Risk",dueDate:"",acao:"Propor modelo de acesso"},
 ];
 const DEFAULT_MILESTONES = [
   {id:1,name:"Kickoff do Projeto",date:"2025-03-01"},
   {id:2,name:"Alinhamento de Venues",date:"2025-04-15"},
   {id:3,name:"Aprovações Documentais",date:"2025-05-30"},
-  {id:4,name:"Festival SWF",date:"2025-07-20"},
+  {id:4,name:"Festival SWM",date:"2025-07-20"},
 ];
 const DEFAULT_EVENT_DATES = {
   montagem:{start:"2025-04-27",end:"2025-05-11"},
   evento:{start:"2025-05-12",end:"2025-05-15"},
   designFreeze:{start:"2025-04-17",end:""},
 };
-const emptyIssue = {categoria:"",venue:"",descricao:"",prioridade:"HIGH",responsavel:"—",status:"At Risk",dueDate:"",acao:""};
+const DEFAULT_CRONOGRAMA = [
+  {id:1,categoria:"Arquitetura",tarefa:"Exemplo de Tarefa",inicio:"2026-04-20",fim:"2026-05-08",responsavel:"—",status:"On Track",progresso:50},
+];
+
+const emptyIssue = {categoria:"Arquitetura",venue:"",descricao:"",prioridade:"HIGH",responsavel:"—",status:"At Risk",dueDate:"",acao:""};
+const emptyCron  = {categoria:"Arquitetura",tarefa:"",inicio:"",fim:"",responsavel:"—",status:"On Track",progresso:0};
 const iSt = {background:P.surface,color:P.text,border:"1px solid "+P.border,borderRadius:"6px",padding:"5px 8px",fontSize:"12px",width:"100%"};
+const fmtDate = d => d ? d.split("-").reverse().join("/") : "—";
 
 const sbGet = async (key) => {
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/swf_tracker?key=eq.${key}&select=value`, {
-      headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${SUPABASE_KEY}` }
-    });
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/swf_tracker?key=eq.${key}&select=value`,
+      {headers:{"apikey":SUPABASE_KEY,"Authorization":`Bearer ${SUPABASE_KEY}`}});
     const data = await res.json();
     return data?.[0]?.value ? JSON.parse(data[0].value) : null;
   } catch(e) { return null; }
 };
-
 const sbSet = async (key, value) => {
   try {
-    await fetch(`${SUPABASE_URL}/rest/v1/swf_tracker`, {
-      method: "POST",
-      headers: {
-        "apikey": SUPABASE_KEY,
-        "Authorization": `Bearer ${SUPABASE_KEY}`,
-        "Content-Type": "application/json",
-        "Prefer": "resolution=merge-duplicates"
-      },
-      body: JSON.stringify({ key, value: JSON.stringify(value), updated_at: new Date().toISOString() })
+    await fetch(`${SUPABASE_URL}/rest/v1/swf_tracker`,{
+      method:"POST",
+      headers:{"apikey":SUPABASE_KEY,"Authorization":`Bearer ${SUPABASE_KEY}`,"Content-Type":"application/json","Prefer":"resolution=merge-duplicates"},
+      body:JSON.stringify({key,value:JSON.stringify(value),updated_at:new Date().toISOString()})
     });
   } catch(e) {}
 };
@@ -102,135 +109,301 @@ const PriorityPill = ({p}) => (
   <span style={{padding:"3px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700,background:PRIORITY_COLORS[p]?.bg||"#f3f4f6",color:PRIORITY_COLORS[p]?.text||"#374151"}}>{p}</span>
 );
 
-function App() {
-  const [ready,setReady] = useState(false);
-  const [isEditor,setIsEditor] = useState(false);
-  const [showPassModal,setShowPassModal] = useState(false);
-  const [passInput,setPassInput] = useState("");
-  const [passError,setPassError] = useState(false);
-  const [issues,setIssues] = useState(DEFAULT_ISSUES);
-  const [milestones,setMilestones] = useState(DEFAULT_MILESTONES);
-  const [eventDates,setEventDates] = useState(DEFAULT_EVENT_DATES);
-  const [versionNum,setVersionNum] = useState("01");
-  const [tab,setTab] = useState("tracker");
+const GanttChart = ({tasks}) => {
+  if(!tasks.length) return <p style={{color:P.muted,fontSize:"13px"}}>Nenhuma tarefa cadastrada.</p>;
+  const dates = tasks.flatMap(t=>[new Date(t.inicio),new Date(t.fim)]).filter(d=>!isNaN(d));
+  if(!dates.length) return <p style={{color:P.muted,fontSize:"13px"}}>Adicione datas para ver o Gantt.</p>;
+  const minDate = new Date(Math.min(...dates));
+  const maxDate = new Date(Math.max(...dates));
+  const totalDays = Math.max((maxDate-minDate)/(1000*60*60*24),1);
+  const months = [];
+  let cur = new Date(minDate.getFullYear(),minDate.getMonth(),1);
+  while(cur<=maxDate){ months.push(new Date(cur)); cur=new Date(cur.getFullYear(),cur.getMonth()+1,1); }
+  return (
+    <div style={{overflowX:"auto"}}>
+      <div style={{minWidth:"600px",position:"relative"}}>
+        <div style={{display:"flex",marginLeft:"180px",marginBottom:"8px",position:"relative",height:"16px"}}>
+          {months.map((m,i)=>{
+            const mStart=new Date(Math.max(m,minDate));
+            const left=((mStart-minDate)/(1000*60*60*24))/totalDays*100;
+            return <div key={i} style={{position:"absolute",left:`calc(${left}%)`,fontSize:"10px",fontWeight:600,color:P.muted,letterSpacing:"0.05em",textTransform:"uppercase",whiteSpace:"nowrap"}}>
+              {m.toLocaleDateString("pt-BR",{month:"short",year:"2-digit"})}
+            </div>;
+          })}
+        </div>
+        {tasks.map((task)=>{
+          const start=new Date(task.inicio), end=new Date(task.fim);
+          const valid=!isNaN(start)&&!isNaN(end);
+          const left=valid?((start-minDate)/(1000*60*60*24))/totalDays*100:0;
+          const width=valid?Math.max(((end-start)/(1000*60*60*24)+1)/totalDays*100,1):0;
+          const color=STATUS_COLORS[task.status]?.dot||P.cinza;
+          return (
+            <div key={task.id} style={{display:"flex",alignItems:"center",marginBottom:"10px",height:"32px"}}>
+              <div style={{width:"180px",flexShrink:0,fontSize:"12px",color:P.text,fontWeight:500,paddingRight:"12px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{task.tarefa}</div>
+              <div style={{flex:1,position:"relative",height:"24px",background:P.bg,borderRadius:"4px"}}>
+                {valid&&<div style={{position:"absolute",left:left+"%",width:width+"%",height:"100%",background:color+"33",borderRadius:"4px",border:"1px solid "+color+"66"}}>
+                  <div style={{width:task.progresso+"%",height:"100%",background:color,borderRadius:"4px",display:"flex",alignItems:"center",justifyContent:"flex-end",paddingRight:"4px"}}>
+                    {task.progresso>15&&<span style={{fontSize:"10px",color:"#fff",fontWeight:700}}>{task.progresso}%</span>}
+                  </div>
+                </div>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+// Reusable issue table
+const IssueTable = ({issues, isEditor, onAdd, onEdit, onDelete, filterCat}) => {
   const [search,setSearch] = useState("");
   const [filterStatus,setFilter] = useState("Todos");
+  const [showNew,setShowNew] = useState(false);
+  const [newIssue,setNewIssue] = useState({...emptyIssue, categoria: filterCat||"Arquitetura"});
   const [editingId,setEditingId] = useState(null);
   const [editData,setEditData] = useState({});
-  const [showNew,setShowNew] = useState(false);
-  const [newIssue,setNewIssue] = useState(emptyIssue);
-  const [editingMilestone,setEditingMilestone] = useState(null);
-  const [savedMsg,setSavedMsg] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      const [i,m,ed,v] = await Promise.all([
-        sbGet("issues"), sbGet("milestones"), sbGet("eventDates"), sbGet("version"),
-      ]);
-      if(i) setIssues(i);
-      if(m) setMilestones(m);
-      if(ed) setEventDates(ed);
-      if(v) setVersionNum(v);
+  const filtered = useMemo(() => issues.filter(i=>
+    (filterCat ? i.categoria===filterCat : true) &&
+    (filterStatus==="Todos"||i.status===filterStatus) &&
+    (!search||[i.categoria,i.venue,i.descricao,i.acao,i.responsavel].some(f=>f.toLowerCase().includes(search.toLowerCase())))
+  ),[issues,filterCat,filterStatus,search]);
+
+  return (
+    <div>
+      <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"14px",flexWrap:"wrap"}}>
+        <div style={{position:"relative",flex:1,minWidth:"200px"}}>
+          <span style={{position:"absolute",left:"10px",top:"50%",transform:"translateY(-50%)",color:P.muted}}>🔍</span>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar..." style={{...iSt,paddingLeft:"30px",borderRadius:"8px",width:"100%"}}/>
+        </div>
+        {["Todos",...STATUS_LIST].map(s=>(
+          <button key={s} onClick={()=>setFilter(s)} style={{padding:"6px 14px",borderRadius:"20px",fontSize:"12px",fontWeight:600,cursor:"pointer",background:filterStatus===s?(s==="Todos"?P.text:STATUS_COLORS[s]?.dot):P.surface,color:filterStatus===s?"#fff":P.muted,border:"1px solid "+(filterStatus===s?"transparent":P.border)}}>{s}</button>
+        ))}
+        {isEditor&&<button onClick={()=>setShowNew(true)} style={{background:P.verde,border:"none",color:"#fff",borderRadius:"8px",padding:"6px 14px",fontSize:"12px",fontWeight:600,cursor:"pointer"}}>+ Novo Issue</button>}
+      </div>
+      <div style={{background:P.surface,borderRadius:"12px",border:"1px solid "+P.border,overflowX:"auto"}}>
+        <table style={{width:"100%",borderCollapse:"collapse",fontSize:"12px"}}>
+          <thead>
+            <tr style={{borderBottom:"1px solid "+P.border,background:P.bg}}>
+              {["Nº","CATEGORIA","VENUE","DESCRIÇÃO","PRIORIDADE","RESPONSÁVEL","STATUS","DUE DATE","AÇÃO NECESSÁRIA",isEditor?"":null].filter(h=>h!==null).map(h=>(
+                <th key={h} style={{padding:"11px 12px",color:P.muted,fontWeight:600,fontSize:"10px",textAlign:"left",letterSpacing:"0.06em",whiteSpace:"nowrap"}}>{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {isEditor&&showNew&&(
+              <tr style={{borderBottom:"1px solid "+P.border,background:P.verde+"08"}}>
+                <td style={{padding:"8px 12px",color:P.muted}}>#{String(issues.length+1).padStart(2,"0")}</td>
+                {[
+                  filterCat
+                    ? <span style={{padding:"3px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700,background:CAT_COLORS[filterCat]+"22",color:CAT_COLORS[filterCat]}}>{filterCat}</span>
+                    : <select style={iSt} value={newIssue.categoria} onChange={e=>setNewIssue({...newIssue,categoria:e.target.value})}>{ISSUE_CATS.map(c=><option key={c}>{c}</option>)}</select>,
+                  <input style={iSt} value={newIssue.venue} onChange={e=>setNewIssue({...newIssue,venue:e.target.value})} placeholder="Venue"/>,
+                  <input style={iSt} value={newIssue.descricao} onChange={e=>setNewIssue({...newIssue,descricao:e.target.value})} placeholder="Descrição"/>,
+                  <select style={iSt} value={newIssue.prioridade} onChange={e=>setNewIssue({...newIssue,prioridade:e.target.value})}>{["CRITICAL","HIGH","MEDIUM","LOW"].map(p=><option key={p}>{p}</option>)}</select>,
+                  <select style={iSt} value={newIssue.responsavel} onChange={e=>setNewIssue({...newIssue,responsavel:e.target.value})}>{TEAM_MEMBERS.map(m=><option key={m}>{m}</option>)}</select>,
+                  <select style={iSt} value={newIssue.status} onChange={e=>setNewIssue({...newIssue,status:e.target.value})}>{STATUS_LIST.map(s=><option key={s}>{s}</option>)}</select>,
+                  <input type="date" style={iSt} value={newIssue.dueDate} onChange={e=>setNewIssue({...newIssue,dueDate:e.target.value})}/>,
+                  <input style={iSt} value={newIssue.acao} onChange={e=>setNewIssue({...newIssue,acao:e.target.value})} placeholder="Ação necessária"/>,
+                ].map((el,i)=><td key={i} style={{padding:"5px"}}>{el}</td>)}
+                <td style={{padding:"5px"}}><div style={{display:"flex",gap:"5px"}}>
+                  <button onClick={()=>{onAdd({...newIssue,categoria:filterCat||newIssue.categoria,id:Date.now()});setNewIssue({...emptyIssue,categoria:filterCat||"Arquitetura"});setShowNew(false);}} style={{background:P.verde,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:"#fff"}}>✓</button>
+                  <button onClick={()=>setShowNew(false)} style={{background:P.border,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:P.text}}>✕</button>
+                </div></td>
+              </tr>
+            )}
+            {filtered.map((issue,idx)=>{
+              const isEdit=isEditor&&editingId===issue.id;
+              return (
+                <tr key={issue.id} style={{borderBottom:"1px solid "+P.border,borderLeft:"3px solid "+(STATUS_COLORS[issue.status]?.dot||P.border),background:idx%2===0?P.surface:P.bg}}>
+                  <td style={{padding:"12px",color:P.muted,fontWeight:600,whiteSpace:"nowrap"}}>#{String(idx+1).padStart(2,"0")}</td>
+                  {isEdit?(
+                    <>
+                      {[
+                        <select style={iSt} value={editData.categoria} onChange={e=>setEditData({...editData,categoria:e.target.value})}>{ISSUE_CATS.map(c=><option key={c}>{c}</option>)}</select>,
+                        <input style={iSt} value={editData.venue} onChange={e=>setEditData({...editData,venue:e.target.value})}/>,
+                        <input style={iSt} value={editData.descricao} onChange={e=>setEditData({...editData,descricao:e.target.value})}/>,
+                        <select style={iSt} value={editData.prioridade} onChange={e=>setEditData({...editData,prioridade:e.target.value})}>{["CRITICAL","HIGH","MEDIUM","LOW"].map(p=><option key={p}>{p}</option>)}</select>,
+                        <select style={iSt} value={editData.responsavel} onChange={e=>setEditData({...editData,responsavel:e.target.value})}>{TEAM_MEMBERS.map(m=><option key={m}>{m}</option>)}</select>,
+                        <select style={iSt} value={editData.status} onChange={e=>setEditData({...editData,status:e.target.value})}>{STATUS_LIST.map(s=><option key={s}>{s}</option>)}</select>,
+                        <input type="date" style={iSt} value={editData.dueDate} onChange={e=>setEditData({...editData,dueDate:e.target.value})}/>,
+                        <input style={iSt} value={editData.acao} onChange={e=>setEditData({...editData,acao:e.target.value})}/>,
+                      ].map((el,i)=><td key={i} style={{padding:"5px"}}>{el}</td>)}
+                      <td style={{padding:"5px"}}><div style={{display:"flex",gap:"5px"}}>
+                        <button onClick={()=>{onEdit(editData);setEditingId(null);}} style={{background:P.verde,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:"#fff"}}>✓</button>
+                        <button onClick={()=>setEditingId(null)} style={{background:P.border,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:P.text}}>✕</button>
+                      </div></td>
+                    </>
+                  ):(
+                    <>
+                      <td style={{padding:"12px"}}>
+                        <span style={{background:(CAT_COLORS[issue.categoria]||P.verde)+"22",color:CAT_COLORS[issue.categoria]||P.verde,padding:"3px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700}}>{issue.categoria}</span>
+                      </td>
+                      <td style={{padding:"12px",color:P.muted}}>{issue.venue}</td>
+                      <td style={{padding:"12px",color:P.text,maxWidth:"240px"}}>{issue.descricao}</td>
+                      <td style={{padding:"12px"}}><PriorityPill p={issue.prioridade}/></td>
+                      <td style={{padding:"12px",color:P.muted,whiteSpace:"nowrap"}}>{issue.responsavel}</td>
+                      <td style={{padding:"12px"}}><StatusPill s={issue.status}/></td>
+                      <td style={{padding:"12px",color:P.muted,whiteSpace:"nowrap"}}>{fmtDate(issue.dueDate)}</td>
+                      <td style={{padding:"12px",color:P.muted,maxWidth:"180px"}}>{issue.acao}</td>
+                      {isEditor&&<td style={{padding:"12px"}}><div style={{display:"flex",gap:"8px"}}>
+                        <button onClick={()=>{setEditingId(issue.id);setEditData({...issue});}} style={{background:"none",border:"none",cursor:"pointer",color:P.muted}}>✏️</button>
+                        <button onClick={()=>onDelete(issue.id)} style={{background:"none",border:"none",cursor:"pointer",color:P.coral}}>🗑</button>
+                      </div></td>}
+                    </>
+                  )}
+                </tr>
+              );
+            })}
+            {filtered.length===0&&<tr><td colSpan={10} style={{padding:"40px",textAlign:"center",color:P.muted}}>Nenhum issue encontrado.</td></tr>}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+function App() {
+  const [ready,setReady]             = useState(false);
+  const [loggedIn,setLoggedIn]       = useState(false);
+  const [loginMode,setLoginMode]     = useState("visitor");
+  const [loginPass,setLoginPass]     = useState("");
+  const [loginError,setLoginError]   = useState(false);
+  const [isEditor,setIsEditor]       = useState(false);
+  const [issues,setIssues]           = useState(DEFAULT_ISSUES);
+  const [milestones,setMilestones]   = useState(DEFAULT_MILESTONES);
+  const [eventDates,setEventDates]   = useState(DEFAULT_EVENT_DATES);
+  const [versionNum,setVersionNum]   = useState("01");
+  const [cronograma,setCronograma]   = useState(DEFAULT_CRONOGRAMA);
+  const [tab,setTab]                 = useState("tracker");
+  const [cronCat,setCronCat]         = useState("Todas");
+  const [editingMilestone,setEditingMilestone] = useState(null);
+  const [editingCronId,setEditingCronId]       = useState(null);
+  const [editCronData,setEditCronData]         = useState({});
+  const [showNewCron,setShowNewCron]           = useState(false);
+  const [newCron,setNewCron]                   = useState(emptyCron);
+  const [savedMsg,setSavedMsg]       = useState(false);
+
+  useEffect(()=>{
+    (async()=>{
+      const [i,m,ed,v,cr]=await Promise.all([sbGet("issues"),sbGet("milestones"),sbGet("eventDates"),sbGet("version"),sbGet("cronograma")]);
+      if(i) setIssues(i); if(m) setMilestones(m); if(ed) setEventDates(ed); if(v) setVersionNum(v); if(cr) setCronograma(cr);
       setReady(true);
     })();
   },[]);
 
-  useEffect(() => { if(ready) sbSet("issues",issues); },[issues,ready]);
-  useEffect(() => { if(ready) sbSet("milestones",milestones); },[milestones,ready]);
-  useEffect(() => { if(ready) sbSet("eventDates",eventDates); },[eventDates,ready]);
-  useEffect(() => { if(ready) sbSet("version",versionNum); },[versionNum,ready]);
+  useEffect(()=>{ if(ready) sbSet("issues",issues); },[issues,ready]);
+  useEffect(()=>{ if(ready) sbSet("milestones",milestones); },[milestones,ready]);
+  useEffect(()=>{ if(ready) sbSet("eventDates",eventDates); },[eventDates,ready]);
+  useEffect(()=>{ if(ready) sbSet("version",versionNum); },[versionNum,ready]);
+  useEffect(()=>{ if(ready) sbSet("cronograma",cronograma); },[cronograma,ready]);
 
-  const flash = () => { setSavedMsg(true); setTimeout(()=>setSavedMsg(false),2000); };
-  const handleUnlock = () => {
-    if(passInput===EDIT_PASSWORD){ setIsEditor(true); setShowPassModal(false); setPassInput(""); setPassError(false); }
-    else setPassError(true);
+  const flash = ()=>{ setSavedMsg(true); setTimeout(()=>setSavedMsg(false),2000); };
+
+  const handleLogin = () => {
+    if(loginMode==="visitor"&&loginPass===VIEW_PASSWORD){ setLoggedIn(true); setIsEditor(false); setLoginError(false); }
+    else if(loginMode==="editor"&&loginPass===EDIT_PASSWORD){ setLoggedIn(true); setIsEditor(true); setLoginError(false); }
+    else setLoginError(true);
   };
 
-  const counts = useMemo(() => {
-    const c={total:issues.length};
-    STATUS_LIST.forEach(s=>c[s]=issues.filter(i=>i.status===s).length);
-    return c;
+  const counts = useMemo(()=>{
+    const c={total:issues.length}; STATUS_LIST.forEach(s=>c[s]=issues.filter(i=>i.status===s).length); return c;
   },[issues]);
-
-  const overallProgress = useMemo(() => !issues.length?0:Math.round((counts["Completed"]/issues.length)*100),[issues,counts]);
-  const pieData = useMemo(() => STATUS_LIST.map(s=>({name:s,value:counts[s]})).filter(d=>d.value>0),[counts]);
-  const upcomingDeadlines = useMemo(() => {
-    const today=new Date(), next30=new Date(today.getTime()+30*24*60*60*1000);
+  const overallProgress = useMemo(()=>!issues.length?0:Math.round((counts["Completed"]/issues.length)*100),[issues,counts]);
+  const upcomingDeadlines = useMemo(()=>{
+    const today=new Date(),next30=new Date(today.getTime()+30*24*60*60*1000);
     return issues.filter(i=>{const d=new Date(i.dueDate);return i.dueDate&&d>=today&&d<=next30&&i.status!=="Completed";}).sort((a,b)=>new Date(a.dueDate)-new Date(b.dueDate));
   },[issues]);
-  const filtered = useMemo(() => issues.filter(i=>
-    (filterStatus==="Todos"||i.status===filterStatus)&&
-    (!search||[i.categoria,i.venue,i.descricao,i.acao,i.responsavel].some(f=>f.toLowerCase().includes(search.toLowerCase())))
-  ),[issues,search,filterStatus]);
+  const filteredCron = useMemo(()=>cronCat==="Todas"?cronograma:cronograma.filter(t=>t.categoria===cronCat),[cronograma,cronCat]);
 
-  const addIssue = () => { setIssues(p=>[...p,{...newIssue,id:Date.now()}]); setNewIssue(emptyIssue); setShowNew(false); flash(); };
-  const deleteIssue = id => { setIssues(p=>p.filter(i=>i.id!==id)); flash(); };
-  const startEdit = issue => { setEditingId(issue.id); setEditData({...issue}); };
-  const saveEdit = () => { setIssues(p=>p.map(i=>i.id===editingId?editData:i)); setEditingId(null); flash(); };
-  const cancelEdit = () => setEditingId(null);
-  const addMilestone = () => { const m={id:Date.now(),name:"Novo Marco",date:new Date().toISOString().split("T")[0]}; setMilestones(p=>[...p,m]); setEditingMilestone(m.id); };
+  const addIssue    = (issue) => { setIssues(p=>[...p,issue]); flash(); };
+  const editIssue   = (data)  => { setIssues(p=>p.map(i=>i.id===data.id?data:i)); flash(); };
+  const deleteIssue = (id)    => { setIssues(p=>p.filter(i=>i.id!==id)); flash(); };
+  const addMilestone = ()=>{ const m={id:Date.now(),name:"Novo Marco",date:new Date().toISOString().split("T")[0]}; setMilestones(p=>[...p,m]); setEditingMilestone(m.id); };
+  const addCron    = ()=>{ setCronograma(p=>[...p,{...newCron,id:Date.now()}]); setNewCron(emptyCron); setShowNewCron(false); flash(); };
+  const deleteCron = id=>{ setCronograma(p=>p.filter(t=>t.id!==id)); flash(); };
+  const saveEditCron = ()=>{ setCronograma(p=>p.map(t=>t.id===editingCronId?editCronData:t)); setEditingCronId(null); flash(); };
 
-  const btnStyle = active => ({
-    display:"flex",alignItems:"center",gap:"5px",padding:"6px 14px",
-    borderRadius:"8px",fontSize:"12px",fontWeight:600,cursor:"pointer",
+  const btnStyle = active=>({
+    display:"flex",alignItems:"center",gap:"5px",padding:"5px 12px",
+    borderRadius:"8px",fontSize:"11px",fontWeight:600,cursor:"pointer",
     background:"#ffffff22",color:active?"#fff":"#ffffffaa",
-    border:"1.5px solid "+(active?"#fff":"transparent"),
+    border:"1.5px solid "+(active?"#fff":"transparent"),whiteSpace:"nowrap",
   });
 
+  // ── LOADING ──
   if(!ready) return (
-    <div style={{background:P.bg,minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center"}}>
-      <div style={{textAlign:"center",color:P.muted,fontSize:"14px"}}>Conectando ao banco de dados…</div>
+    <div style={{background:"linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)",minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{color:"#ffffff88",fontSize:"14px"}}>Conectando…</div>
     </div>
   );
 
-  return (
-    <div style={{background:P.bg,minHeight:"100vh",padding:"24px",fontFamily:"Inter,sans-serif"}}>
-
-      {showPassModal&&(
-        <div style={{position:"fixed",inset:0,background:"#00000066",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <div style={{background:P.surface,borderRadius:"14px",padding:"32px",width:"320px",boxShadow:"0 20px 60px #0003"}}>
-            <div style={{fontWeight:700,fontSize:"15px",color:P.text,marginBottom:"16px"}}>🔒 Modo Edição</div>
-            <p style={{color:P.muted,fontSize:"13px",marginBottom:"16px"}}>Digite a senha para habilitar edição:</p>
-            <input type="password" value={passInput} onChange={e=>{setPassInput(e.target.value);setPassError(false);}} onKeyDown={e=>e.key==="Enter"&&handleUnlock()} placeholder="Senha" style={{...iSt,marginBottom:"8px",fontSize:"14px",padding:"10px 12px"}} autoFocus/>
-            {passError&&<p style={{color:P.coral,fontSize:"12px",margin:"0 0 12px"}}>Senha incorreta.</p>}
-            <div style={{display:"flex",gap:"8px",marginTop:"8px"}}>
-              <button onClick={handleUnlock} style={{flex:1,background:P.verde,border:"none",color:"#fff",borderRadius:"8px",padding:"10px",fontSize:"13px",fontWeight:600,cursor:"pointer"}}>Entrar</button>
-              <button onClick={()=>{setShowPassModal(false);setPassInput("");setPassError(false);}} style={{flex:1,background:P.bg,border:"1px solid "+P.border,color:P.muted,borderRadius:"8px",padding:"10px",fontSize:"13px",fontWeight:600,cursor:"pointer"}}>Cancelar</button>
-            </div>
-          </div>
+  // ── LOGIN ──
+  if(!loggedIn) return (
+    <div style={{background:"linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)",minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:"24px"}}>
+      <div style={{width:"100%",maxWidth:"420px"}}>
+        <div style={{textAlign:"center",marginBottom:"32px"}}>
+          <svg width="200" height="70" viewBox="0 0 360 120">
+            <text y="105" fontFamily="Arial Black,Arial,sans-serif" fontWeight="900" fontSize="120">
+              <tspan fill="#F45C6A">S</tspan><tspan fill="#F28C48">W</tspan><tspan fill="#00A89D">M</tspan>
+            </text>
+          </svg>
+          <div style={{color:"#ffffff88",fontSize:"12px",marginTop:"4px",letterSpacing:"0.1em"}}>SPORTS & WELLNESS MOVEMENT</div>
         </div>
-      )}
+        <div style={{background:"#ffffff0d",border:"1px solid #ffffff1a",borderRadius:"16px",padding:"32px"}}>
+          <div style={{color:"#fff",fontWeight:700,fontSize:"18px",marginBottom:"8px",textAlign:"center"}}>Bem-vinda! 👋</div>
+          <div style={{color:"#ffffff88",fontSize:"13px",textAlign:"center",marginBottom:"24px"}}>Selecione seu tipo de acesso</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",marginBottom:"16px"}}>
+            <button onClick={()=>{setLoginMode("visitor");setLoginError(false);setLoginPass("");}} style={{padding:"12px",borderRadius:"10px",border:"2px solid "+(loginMode==="visitor"?P.verde:"#ffffff22"),background:loginMode==="visitor"?P.verde+"22":"transparent",color:loginMode==="visitor"?P.verde:"#ffffff88",fontWeight:600,fontSize:"13px",cursor:"pointer"}}>
+              👁 Visitante
+            </button>
+            <button onClick={()=>{setLoginMode("editor");setLoginError(false);setLoginPass("");}} style={{padding:"12px",borderRadius:"10px",border:"2px solid "+(loginMode==="editor"?P.coral:"#ffffff22"),background:loginMode==="editor"?P.coral+"22":"transparent",color:loginMode==="editor"?P.coral:"#ffffff88",fontWeight:600,fontSize:"13px",cursor:"pointer"}}>
+              ✏️ Editor
+            </button>
+          </div>
+          <div style={{color:"#ffffff55",fontSize:"11px",textAlign:"center",marginBottom:"16px"}}>
+            {loginMode==="visitor"?"Acesso somente leitura para a equipe":"Acesso completo com edição"}
+          </div>
+          <input type="password" value={loginPass} onChange={e=>{setLoginPass(e.target.value);setLoginError(false);}} onKeyDown={e=>e.key==="Enter"&&handleLogin()} placeholder="Digite a senha"
+            style={{width:"100%",background:"#ffffff0d",border:"1px solid "+(loginError?"#ef4444":"#ffffff22"),borderRadius:"10px",padding:"12px 16px",color:"#fff",fontSize:"14px",outline:"none",marginBottom:"8px"}}/>
+          {loginError&&<p style={{color:"#ef4444",fontSize:"12px",margin:"0 0 12px",textAlign:"center"}}>Senha incorreta.</p>}
+          <button onClick={handleLogin} style={{width:"100%",background:"linear-gradient(120deg,"+P.coral+","+P.laranja+")",border:"none",color:"#fff",borderRadius:"10px",padding:"13px",fontSize:"14px",fontWeight:700,cursor:"pointer",marginTop:"8px"}}>
+            Entrar →
+          </button>
+        </div>
+        <div style={{textAlign:"center",marginTop:"20px",color:"#ffffff33",fontSize:"11px"}}>Sports & Wellness Movement 2026 · Movmt</div>
+      </div>
+    </div>
+  );
+
+  // ── MAIN APP ──
+  return (
+    <div style={{background:P.bg,minHeight:"100vh",padding:"24px"}}>
 
       {/* TOP BAR */}
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:"linear-gradient(120deg,"+P.coral+","+P.laranja+")",borderRadius:"10px",padding:"10px 20px",marginBottom:"10px"}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",background:"linear-gradient(120deg,"+P.coral+","+P.laranja+")",borderRadius:"10px",padding:"10px 20px",marginBottom:"10px",flexWrap:"wrap",gap:"8px"}}>
         <div>
           <div style={{color:"#fff",fontWeight:700,fontSize:"14px"}}>Issue Tracker</div>
-          <div style={{color:"#ffffffaa",fontSize:"11px"}}>SWF 2026</div>
+          <div style={{color:"#ffffffaa",fontSize:"11px"}}>SWM 2026</div>
         </div>
-        <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+        <div style={{display:"flex",alignItems:"center",gap:"6px",flexWrap:"wrap"}}>
           {savedMsg&&<span style={{color:"#fff",fontSize:"11px",background:"#ffffff22",borderRadius:"6px",padding:"3px 10px"}}>✓ Salvo</span>}
-          <button onClick={()=>isEditor?setIsEditor(false):setShowPassModal(true)} style={{display:"flex",alignItems:"center",gap:"5px",padding:"6px 12px",borderRadius:"8px",fontSize:"12px",fontWeight:600,cursor:"pointer",background:isEditor?"#ffffff33":"#ffffff22",color:"#fff",border:"1.5px solid "+(isEditor?"#fff":"transparent")}}>
-            {isEditor?"🔓 Editando":"🔒 Somente leitura"}
-          </button>
           <div style={{display:"flex",alignItems:"center",background:"#ffffff22",border:"1px solid #ffffff44",borderRadius:"8px",padding:"4px 10px"}}>
             <span style={{color:"#ffffffcc",fontSize:"12px",fontWeight:600}}>V</span>
             <input value={versionNum} onChange={e=>isEditor&&setVersionNum(e.target.value.replace(/\D/g,""))} readOnly={!isEditor} style={{background:"transparent",border:"none",color:"#fff",fontSize:"12px",fontWeight:600,width:"24px",outline:"none"}} maxLength={2}/>
           </div>
-          <button onClick={()=>setTab("tracker")} style={btnStyle(tab==="tracker")}>Issues</button>
-          <button onClick={()=>setTab("dashboard")} style={btnStyle(tab==="dashboard")}>Dashboard</button>
+          <button onClick={()=>setTab("tracker")}    style={btnStyle(tab==="tracker")}>Issues</button>
+          <button onClick={()=>setTab("cronograma")}  style={btnStyle(tab==="cronograma")}>Cronograma</button>
+          <button onClick={()=>setTab("dashboard")}   style={btnStyle(tab==="dashboard")}>Dashboard</button>
+          <button onClick={()=>setLoggedIn(false)} style={{...btnStyle(false),marginLeft:"4px"}}>🚪 Sair</button>
         </div>
       </div>
-
-      {!isEditor&&(
-        <div style={{background:P.laranja+"18",border:"1px solid "+P.laranja+"44",borderRadius:"8px",padding:"8px 16px",marginBottom:"10px"}}>
-          <span style={{color:P.laranja,fontSize:"12px",fontWeight:600}}>👁 Modo visualização — clique em "Somente leitura" para editar</span>
-        </div>
-      )}
 
       {/* EVENT BANNER */}
       <div style={{background:"linear-gradient(120deg,"+P.verde+",#007a72)",borderRadius:"10px",padding:"18px 24px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:"12px",marginBottom:"20px"}}>
         <div>
-          <div style={{fontSize:"20px",fontWeight:800,color:"#fff"}}>Sports & Wellness Festival <span style={{color:P.coral}}>2026</span></div>
+          <div style={{fontSize:"20px",fontWeight:800,color:"#fff"}}>Sports & Wellness Movement <span style={{color:P.coral}}>2026</span></div>
           <div style={{color:"#ffffffaa",fontSize:"12px",marginTop:"4px"}}>Movmt · Evento Proprietário</div>
         </div>
         <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
@@ -238,8 +411,8 @@ function App() {
             <div key={d.key} style={{background:"#ffffff18",borderLeft:"3px solid "+d.color,borderRadius:"8px",padding:"7px 12px",minWidth:"160px"}}>
               <div style={{color:d.color,fontWeight:700,fontSize:"11px",marginBottom:"5px"}}>{d.label}</div>
               <div style={{display:"flex",alignItems:"center",gap:"4px"}}>
-                {isEditor?<input type="date" value={eventDates[d.key].start} onChange={e=>setEventDates(p=>({...p,[d.key]:{...p[d.key],start:e.target.value}}))} style={{background:"transparent",border:"none",borderBottom:"1px solid #ffffff55",color:"#fff",fontSize:"11px",outline:"none",width:"110px"}}/>:<span style={{color:"#fff",fontSize:"11px"}}>{eventDates[d.key].start.split("-").reverse().join("/")}</span>}
-                {d.hasEnd&&<><span style={{color:"#ffffffaa"}}>→</span>{isEditor?<input type="date" value={eventDates[d.key].end} onChange={e=>setEventDates(p=>({...p,[d.key]:{...p[d.key],end:e.target.value}}))} style={{background:"transparent",border:"none",borderBottom:"1px solid #ffffff55",color:"#fff",fontSize:"11px",outline:"none",width:"110px"}}/>:<span style={{color:"#fff",fontSize:"11px"}}>{eventDates[d.key].end.split("-").reverse().join("/")}</span>}</>}
+                {isEditor?<input type="date" value={eventDates[d.key].start} onChange={e=>setEventDates(p=>({...p,[d.key]:{...p[d.key],start:e.target.value}}))} style={{background:"transparent",border:"none",borderBottom:"1px solid #ffffff55",color:"#fff",fontSize:"11px",outline:"none",width:"110px"}}/>:<span style={{color:"#fff",fontSize:"11px"}}>{fmtDate(eventDates[d.key].start)}</span>}
+                {d.hasEnd&&<><span style={{color:"#ffffffaa"}}>→</span>{isEditor?<input type="date" value={eventDates[d.key].end} onChange={e=>setEventDates(p=>({...p,[d.key]:{...p[d.key],end:e.target.value}}))} style={{background:"transparent",border:"none",borderBottom:"1px solid #ffffff55",color:"#fff",fontSize:"11px",outline:"none",width:"110px"}}/>:<span style={{color:"#fff",fontSize:"11px"}}>{fmtDate(eventDates[d.key].end)}</span>}</>}
               </div>
             </div>
           ))}
@@ -264,94 +437,135 @@ function App() {
         ))}
       </div>
 
-      {tab==="tracker"?(
+      {/* CATEGORY BAR — aparece só nas abas de issues */}
+      {(tab==="tracker"||ISSUE_CATS.includes(tab))&&(
+        <div style={{background:"linear-gradient(120deg,#1a1a2e,#0f3460)",borderRadius:"10px",padding:"12px 20px",display:"flex",alignItems:"center",gap:"8px",marginBottom:"16px",flexWrap:"wrap"}}>
+          <span style={{color:"#ffffff88",fontSize:"11px",fontWeight:600,letterSpacing:"0.06em",marginRight:"4px"}}>CATEGORIA</span>
+          <button onClick={()=>setTab("tracker")} style={{padding:"6px 16px",borderRadius:"20px",fontSize:"12px",fontWeight:600,cursor:"pointer",background:tab==="tracker"?"#fff":"#ffffff22",color:tab==="tracker"?P.text:"#ffffffaa",border:"none"}}>
+            Todos
+          </button>
+          {ISSUE_CATS.map(c=>(
+            <button key={c} onClick={()=>setTab(c)} style={{padding:"6px 16px",borderRadius:"20px",fontSize:"12px",fontWeight:600,cursor:"pointer",background:tab===c?CAT_COLORS[c]:"#ffffff22",color:"#fff",border:tab===c?"none":"1px solid #ffffff22"}}>
+              {c}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* ISSUES - TODOS */}
+      {tab==="tracker"&&(
+        <IssueTable issues={issues} isEditor={isEditor} onAdd={addIssue} onEdit={editIssue} onDelete={deleteIssue} filterCat={null}/>
+      )}
+
+      {/* ISSUES - POR CATEGORIA */}
+      {ISSUE_CATS.includes(tab)&&(
         <div>
-          <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"14px",flexWrap:"wrap"}}>
-            <div style={{position:"relative",flex:1,minWidth:"200px"}}>
-              <span style={{position:"absolute",left:"10px",top:"50%",transform:"translateY(-50%)",color:P.muted}}>🔍</span>
-              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Buscar issue, categoria, venue, ação..." style={{...iSt,paddingLeft:"30px",borderRadius:"8px",width:"100%"}}/>
-            </div>
-            {["Todos",...STATUS_LIST].map(s=>(
-              <button key={s} onClick={()=>setFilter(s)} style={{padding:"6px 14px",borderRadius:"20px",fontSize:"12px",fontWeight:600,cursor:"pointer",background:filterStatus===s?(s==="Todos"?P.text:STATUS_COLORS[s]?.dot):P.surface,color:filterStatus===s?"#fff":P.muted,border:"1px solid "+(filterStatus===s?"transparent":P.border)}}>{s}</button>
-            ))}
-            {isEditor&&<button onClick={()=>setShowNew(true)} style={{display:"flex",alignItems:"center",gap:"5px",background:P.verde,border:"none",color:"#fff",borderRadius:"8px",padding:"6px 14px",fontSize:"12px",fontWeight:600,cursor:"pointer"}}>+ Novo Issue</button>}
+          <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"16px"}}>
+            <div style={{width:"12px",height:"12px",borderRadius:"50%",background:CAT_COLORS[tab]||P.verde}}/>
+            <span style={{fontWeight:700,fontSize:"16px",color:P.text}}>{tab}</span>
+            <span style={{color:P.muted,fontSize:"13px"}}>— {issues.filter(i=>i.categoria===tab).length} issues</span>
           </div>
-          <div style={{background:P.surface,borderRadius:"12px",border:"1px solid "+P.border,overflowX:"auto"}}>
+          <IssueTable issues={issues} isEditor={isEditor} onAdd={addIssue} onEdit={editIssue} onDelete={deleteIssue} filterCat={tab}/>
+        </div>
+      )}
+
+      {/* CRONOGRAMA */}
+      {tab==="cronograma"&&(
+        <div>
+          <div style={{display:"flex",alignItems:"center",gap:"10px",marginBottom:"16px",flexWrap:"wrap"}}>
+            {["Todas",...CRONOGRAMA_CATS].map(c=>(
+              <button key={c} onClick={()=>setCronCat(c)} style={{padding:"6px 16px",borderRadius:"20px",fontSize:"12px",fontWeight:600,cursor:"pointer",background:cronCat===c?(c==="Todas"?P.text:(CAT_COLORS[c]||P.verde)):P.surface,color:cronCat===c?"#fff":P.muted,border:"1px solid "+(cronCat===c?"transparent":P.border)}}>{c}</button>
+            ))}
+            {isEditor&&<button onClick={()=>setShowNewCron(true)} style={{marginLeft:"auto",background:P.coral,border:"none",color:"#fff",borderRadius:"8px",padding:"8px 16px",fontSize:"12px",fontWeight:600,cursor:"pointer"}}>+ Nova Tarefa</button>}
+          </div>
+          <div style={{background:P.surface,borderRadius:"12px",border:"1px solid "+P.border,overflowX:"auto",marginBottom:"20px"}}>
             <table style={{width:"100%",borderCollapse:"collapse",fontSize:"12px"}}>
               <thead>
                 <tr style={{borderBottom:"1px solid "+P.border,background:P.bg}}>
-                  {["Nº","CATEGORIA","VENUE","DESCRIÇÃO","PRIORIDADE","RESPONSÁVEL","STATUS","DUE DATE","AÇÃO NECESSÁRIA",isEditor?"":null].filter(h=>h!==null).map(h=>(
+                  {["Nº","CATEGORIA","TAREFA","INÍCIO","FIM","RESPONSÁVEL","STATUS","% CONCLUSÃO",isEditor?"":null].filter(h=>h!==null).map(h=>(
                     <th key={h} style={{padding:"11px 12px",color:P.muted,fontWeight:600,fontSize:"10px",textAlign:"left",letterSpacing:"0.06em",whiteSpace:"nowrap"}}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {isEditor&&showNew&&(
-                  <tr style={{borderBottom:"1px solid "+P.border,background:P.verde+"08"}}>
-                    <td style={{padding:"8px 12px",color:P.muted}}>#{String(issues.length+1).padStart(2,"0")}</td>
+                {isEditor&&showNewCron&&(
+                  <tr style={{borderBottom:"1px solid "+P.border,background:P.coral+"08"}}>
+                    <td style={{padding:"8px 12px",color:P.muted}}>#{String(cronograma.length+1).padStart(2,"0")}</td>
                     {[
-                      <input style={iSt} value={newIssue.categoria} onChange={e=>setNewIssue({...newIssue,categoria:e.target.value})} placeholder="Categoria"/>,
-                      <input style={iSt} value={newIssue.venue} onChange={e=>setNewIssue({...newIssue,venue:e.target.value})} placeholder="Venue"/>,
-                      <input style={iSt} value={newIssue.descricao} onChange={e=>setNewIssue({...newIssue,descricao:e.target.value})} placeholder="Descrição"/>,
-                      <select style={iSt} value={newIssue.prioridade} onChange={e=>setNewIssue({...newIssue,prioridade:e.target.value})}>{["CRITICAL","HIGH","MEDIUM","LOW"].map(p=><option key={p}>{p}</option>)}</select>,
-                      <select style={iSt} value={newIssue.responsavel} onChange={e=>setNewIssue({...newIssue,responsavel:e.target.value})}>{TEAM_MEMBERS.map(m=><option key={m}>{m}</option>)}</select>,
-                      <select style={iSt} value={newIssue.status} onChange={e=>setNewIssue({...newIssue,status:e.target.value})}>{STATUS_LIST.map(s=><option key={s}>{s}</option>)}</select>,
-                      <input type="date" style={iSt} value={newIssue.dueDate} onChange={e=>setNewIssue({...newIssue,dueDate:e.target.value})}/>,
-                      <input style={iSt} value={newIssue.acao} onChange={e=>setNewIssue({...newIssue,acao:e.target.value})} placeholder="Ação necessária"/>,
+                      <select style={iSt} value={newCron.categoria} onChange={e=>setNewCron({...newCron,categoria:e.target.value})}>{CRONOGRAMA_CATS.map(c=><option key={c}>{c}</option>)}</select>,
+                      <input style={iSt} value={newCron.tarefa} onChange={e=>setNewCron({...newCron,tarefa:e.target.value})} placeholder="Nome da tarefa"/>,
+                      <input type="date" style={iSt} value={newCron.inicio} onChange={e=>setNewCron({...newCron,inicio:e.target.value})}/>,
+                      <input type="date" style={iSt} value={newCron.fim} onChange={e=>setNewCron({...newCron,fim:e.target.value})}/>,
+                      <select style={iSt} value={newCron.responsavel} onChange={e=>setNewCron({...newCron,responsavel:e.target.value})}>{TEAM_MEMBERS.map(m=><option key={m}>{m}</option>)}</select>,
+                      <select style={iSt} value={newCron.status} onChange={e=>setNewCron({...newCron,status:e.target.value})}>{STATUS_LIST.map(s=><option key={s}>{s}</option>)}</select>,
+                      <input type="number" min="0" max="100" style={iSt} value={newCron.progresso} onChange={e=>setNewCron({...newCron,progresso:Number(e.target.value)})}/>,
                     ].map((el,i)=><td key={i} style={{padding:"5px"}}>{el}</td>)}
                     <td style={{padding:"5px"}}><div style={{display:"flex",gap:"5px"}}>
-                      <button onClick={addIssue} style={{background:P.verde,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:"#fff"}}>✓</button>
-                      <button onClick={()=>setShowNew(false)} style={{background:P.border,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:P.text}}>✕</button>
+                      <button onClick={addCron} style={{background:P.verde,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:"#fff"}}>✓</button>
+                      <button onClick={()=>setShowNewCron(false)} style={{background:P.border,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:P.text}}>✕</button>
                     </div></td>
                   </tr>
                 )}
-                {filtered.map((issue,idx)=>{
-                  const isEdit=isEditor&&editingId===issue.id;
+                {filteredCron.map((task,idx)=>{
+                  const isEdit=isEditor&&editingCronId===task.id;
+                  const catColor=CAT_COLORS[task.categoria]||P.verde;
                   return (
-                    <tr key={issue.id} style={{borderBottom:"1px solid "+P.border,borderLeft:"3px solid "+(STATUS_COLORS[issue.status]?.dot||P.border),background:idx%2===0?P.surface:P.bg}}>
-                      <td style={{padding:"12px",color:P.muted,fontWeight:600,whiteSpace:"nowrap"}}>#{String(idx+1).padStart(2,"0")}</td>
+                    <tr key={task.id} style={{borderBottom:"1px solid "+P.border,borderLeft:"3px solid "+catColor,background:idx%2===0?P.surface:P.bg}}>
+                      <td style={{padding:"12px",color:P.muted,fontWeight:600}}>#{String(idx+1).padStart(2,"0")}</td>
                       {isEdit?(
                         <>
                           {[
-                            <input style={iSt} value={editData.categoria} onChange={e=>setEditData({...editData,categoria:e.target.value})}/>,
-                            <input style={iSt} value={editData.venue} onChange={e=>setEditData({...editData,venue:e.target.value})}/>,
-                            <input style={iSt} value={editData.descricao} onChange={e=>setEditData({...editData,descricao:e.target.value})}/>,
-                            <select style={iSt} value={editData.prioridade} onChange={e=>setEditData({...editData,prioridade:e.target.value})}>{["CRITICAL","HIGH","MEDIUM","LOW"].map(p=><option key={p}>{p}</option>)}</select>,
-                            <select style={iSt} value={editData.responsavel} onChange={e=>setEditData({...editData,responsavel:e.target.value})}>{TEAM_MEMBERS.map(m=><option key={m}>{m}</option>)}</select>,
-                            <select style={iSt} value={editData.status} onChange={e=>setEditData({...editData,status:e.target.value})}>{STATUS_LIST.map(s=><option key={s}>{s}</option>)}</select>,
-                            <input type="date" style={iSt} value={editData.dueDate} onChange={e=>setEditData({...editData,dueDate:e.target.value})}/>,
-                            <input style={iSt} value={editData.acao} onChange={e=>setEditData({...editData,acao:e.target.value})}/>,
+                            <select style={iSt} value={editCronData.categoria} onChange={e=>setEditCronData({...editCronData,categoria:e.target.value})}>{CRONOGRAMA_CATS.map(c=><option key={c}>{c}</option>)}</select>,
+                            <input style={iSt} value={editCronData.tarefa} onChange={e=>setEditCronData({...editCronData,tarefa:e.target.value})}/>,
+                            <input type="date" style={iSt} value={editCronData.inicio} onChange={e=>setEditCronData({...editCronData,inicio:e.target.value})}/>,
+                            <input type="date" style={iSt} value={editCronData.fim} onChange={e=>setEditCronData({...editCronData,fim:e.target.value})}/>,
+                            <select style={iSt} value={editCronData.responsavel} onChange={e=>setEditCronData({...editCronData,responsavel:e.target.value})}>{TEAM_MEMBERS.map(m=><option key={m}>{m}</option>)}</select>,
+                            <select style={iSt} value={editCronData.status} onChange={e=>setEditCronData({...editCronData,status:e.target.value})}>{STATUS_LIST.map(s=><option key={s}>{s}</option>)}</select>,
+                            <input type="number" min="0" max="100" style={iSt} value={editCronData.progresso} onChange={e=>setEditCronData({...editCronData,progresso:Number(e.target.value)})}/>,
                           ].map((el,i)=><td key={i} style={{padding:"5px"}}>{el}</td>)}
                           <td style={{padding:"5px"}}><div style={{display:"flex",gap:"5px"}}>
-                            <button onClick={saveEdit} style={{background:P.verde,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:"#fff"}}>✓</button>
-                            <button onClick={cancelEdit} style={{background:P.border,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:P.text}}>✕</button>
+                            <button onClick={saveEditCron} style={{background:P.verde,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:"#fff"}}>✓</button>
+                            <button onClick={()=>setEditingCronId(null)} style={{background:P.border,border:"none",borderRadius:"6px",padding:"4px 8px",cursor:"pointer",color:P.text}}>✕</button>
                           </div></td>
                         </>
                       ):(
                         <>
-                          <td style={{padding:"12px",color:P.text,fontWeight:700}}>{issue.categoria}</td>
-                          <td style={{padding:"12px",color:P.muted}}>{issue.venue}</td>
-                          <td style={{padding:"12px",color:P.text,maxWidth:"240px"}}>{issue.descricao}</td>
-                          <td style={{padding:"12px"}}><PriorityPill p={issue.prioridade}/></td>
-                          <td style={{padding:"12px",color:P.muted,whiteSpace:"nowrap"}}>{issue.responsavel}</td>
-                          <td style={{padding:"12px"}}><StatusPill s={issue.status}/></td>
-                          <td style={{padding:"12px",color:P.muted,whiteSpace:"nowrap"}}>{issue.dueDate?issue.dueDate.split("-").reverse().join("/"):"—"}</td>
-                          <td style={{padding:"12px",color:P.muted,maxWidth:"180px"}}>{issue.acao}</td>
+                          <td style={{padding:"12px"}}><span style={{background:catColor+"22",color:catColor,padding:"3px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700}}>{task.categoria}</span></td>
+                          <td style={{padding:"12px",color:P.text,fontWeight:600}}>{task.tarefa}</td>
+                          <td style={{padding:"12px",color:P.muted,whiteSpace:"nowrap"}}>{fmtDate(task.inicio)}</td>
+                          <td style={{padding:"12px",color:P.muted,whiteSpace:"nowrap"}}>{fmtDate(task.fim)}</td>
+                          <td style={{padding:"12px",color:P.muted}}>{task.responsavel}</td>
+                          <td style={{padding:"12px"}}><StatusPill s={task.status}/></td>
+                          <td style={{padding:"12px"}}>
+                            <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+                              <div style={{flex:1,background:P.border,borderRadius:"999px",height:"6px",minWidth:"80px"}}>
+                                <div style={{width:task.progresso+"%",height:"100%",background:STATUS_COLORS[task.status]?.dot||P.verde,borderRadius:"999px"}}/>
+                              </div>
+                              <span style={{fontSize:"11px",fontWeight:700,color:P.text,whiteSpace:"nowrap"}}>{task.progresso}%</span>
+                            </div>
+                          </td>
                           {isEditor&&<td style={{padding:"12px"}}><div style={{display:"flex",gap:"8px"}}>
-                            <button onClick={()=>startEdit(issue)} style={{background:"none",border:"none",cursor:"pointer",color:P.muted}}>✏️</button>
-                            <button onClick={()=>deleteIssue(issue.id)} style={{background:"none",border:"none",cursor:"pointer",color:P.coral}}>🗑</button>
+                            <button onClick={()=>{setEditingCronId(task.id);setEditCronData({...task});}} style={{background:"none",border:"none",cursor:"pointer",color:P.muted}}>✏️</button>
+                            <button onClick={()=>deleteCron(task.id)} style={{background:"none",border:"none",cursor:"pointer",color:P.coral}}>🗑</button>
                           </div></td>}
                         </>
                       )}
                     </tr>
                   );
                 })}
-                {filtered.length===0&&<tr><td colSpan={10} style={{padding:"40px",textAlign:"center",color:P.muted}}>Nenhum issue encontrado.</td></tr>}
+                {filteredCron.length===0&&<tr><td colSpan={9} style={{padding:"40px",textAlign:"center",color:P.muted}}>Nenhuma tarefa encontrada.</td></tr>}
               </tbody>
             </table>
           </div>
+          <div style={{background:P.surface,borderRadius:"12px",border:"1px solid "+P.border,padding:"24px"}}>
+            <div style={{color:P.muted,fontSize:"11px",fontWeight:600,letterSpacing:"0.06em",marginBottom:"16px"}}>GANTT CHART</div>
+            <GanttChart tasks={filteredCron}/>
+          </div>
         </div>
-      ):(
+      )}
+
+      {/* DASHBOARD */}
+      {tab==="dashboard"&&(
         <div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px",marginBottom:"14px"}}>
             <div style={{background:P.surface,border:"1px solid "+P.border,borderRadius:"12px",padding:"24px"}}>
@@ -389,28 +603,23 @@ function App() {
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"14px"}}>
             <div style={{background:P.surface,border:"1px solid "+P.border,borderRadius:"12px",padding:"24px"}}>
               <p style={{color:P.muted,fontSize:"11px",fontWeight:600,margin:"0 0 12px",letterSpacing:"0.06em"}}>STATUS DISTRIBUTION</p>
-              {counts.total===0?<p style={{color:P.muted}}>Nenhum issue.</p>:(
-                <div>
-                  {STATUS_LIST.map(s=>{
-                    const val=counts[s]||0;
-                    const pct=counts.total?Math.round(val/counts.total*100):0;
-                    return (
-                      <div key={s} style={{marginBottom:"12px"}}>
-                        <div style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
-                          <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
-                            <div style={{width:"8px",height:"8px",borderRadius:"50%",background:STATUS_COLORS[s]?.dot}}/>
-                            <span style={{fontSize:"12px",color:P.text,fontWeight:600}}>{s}</span>
-                          </div>
-                          <span style={{fontSize:"12px",color:P.muted}}>{val} ({pct}%)</span>
-                        </div>
-                        <div style={{background:P.border,borderRadius:"999px",height:"6px"}}>
-                          <div style={{width:pct+"%",height:"100%",background:STATUS_COLORS[s]?.dot,borderRadius:"999px",transition:"width 0.3s"}}/>
-                        </div>
+              {STATUS_LIST.map(s=>{
+                const val=counts[s]||0,pct=counts.total?Math.round(val/counts.total*100):0;
+                return (
+                  <div key={s} style={{marginBottom:"12px"}}>
+                    <div style={{display:"flex",justifyContent:"space-between",marginBottom:"4px"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+                        <div style={{width:"8px",height:"8px",borderRadius:"50%",background:STATUS_COLORS[s]?.dot}}/>
+                        <span style={{fontSize:"12px",color:P.text,fontWeight:600}}>{s}</span>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
+                      <span style={{fontSize:"12px",color:P.muted}}>{val} ({pct}%)</span>
+                    </div>
+                    <div style={{background:P.border,borderRadius:"999px",height:"6px"}}>
+                      <div style={{width:pct+"%",height:"100%",background:STATUS_COLORS[s]?.dot,borderRadius:"999px"}}/>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
             <div style={{background:P.surface,border:"1px solid "+P.border,borderRadius:"12px",padding:"24px"}}>
               <p style={{color:P.muted,fontSize:"11px",fontWeight:600,margin:"0 0 12px",letterSpacing:"0.06em"}}>UPCOMING DEADLINES (30 dias)</p>
@@ -421,7 +630,7 @@ function App() {
                       <div style={{color:P.text,fontSize:"12px",fontWeight:600}}>{i.categoria}</div>
                       <div style={{color:P.muted,fontSize:"11px",marginTop:"2px"}}>{i.descricao.slice(0,60)}…</div>
                       <div style={{display:"flex",justifyContent:"space-between",marginTop:"6px",alignItems:"center"}}>
-                        <span style={{color:P.muted,fontSize:"11px"}}>📅 {i.dueDate.split("-").reverse().join("/")}</span>
+                        <span style={{color:P.muted,fontSize:"11px"}}>📅 {fmtDate(i.dueDate)}</span>
                         <StatusPill s={i.status}/>
                       </div>
                     </div>
@@ -455,7 +664,7 @@ function App() {
                         <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
                           <div>
                             <div style={{color:P.text,fontSize:"12px",fontWeight:600}}>{m.name}</div>
-                            <div style={{color:past?P.muted:P.verde,fontSize:"11px",marginTop:"2px"}}>{m.date.split("-").reverse().join("/")}</div>
+                            <div style={{color:past?P.muted:P.verde,fontSize:"11px",marginTop:"2px"}}>{fmtDate(m.date)}</div>
                           </div>
                           {isEditor&&<div style={{display:"flex",gap:"4px"}}>
                             <button onClick={()=>setEditingMilestone(m.id)} style={{background:"none",border:"none",cursor:"pointer",color:P.muted}}>✏️</button>
