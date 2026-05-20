@@ -51,10 +51,7 @@ const TEAM_MEMBERS = [
 const DEPT_COLORS = {OP:"#F48DA0",PR:"#F28C48",Infra:"#F45C6A",CO:"#00A89D",DO:"#eab308",CEO:"#eab308",AT:"#6366f1",MKT:"#a855f7"};
 const ISSUE_CATS = ["Arquitetura","Produção","Marketing","Atendimento","Comercial"];
 const CRONOGRAMA_CATS = ["Arquitetura","Produção","Marketing","Atendimento","Comercial"];
-const CAT_COLORS = {
-  "Arquitetura":"#6366f1","Produção":"#F28C48","Marketing":"#F48DA0",
-  "Atendimento":"#00A89D","Comercial":"#eab308"
-};
+const CAT_COLORS = {"Arquitetura":"#6366f1","Produção":"#F28C48","Marketing":"#F48DA0","Atendimento":"#00A89D","Comercial":"#eab308"};
 
 const DEFAULT_ISSUES = [
   {id:1,categoria:"Arquitetura",venue:"Todas",descricao:"SPIW está contratando solução CAEX. Qual plataforma adotar?",prioridade:"HIGH",responsavel:"—",status:"At Risk",dueDate:"",acao:"Definir plataforma e convocar reunião"},
@@ -126,12 +123,12 @@ const GanttChart = ({tasks}) => {
           {months.map((m,i)=>{
             const mStart=new Date(Math.max(m,minDate));
             const left=((mStart-minDate)/(1000*60*60*24))/totalDays*100;
-            return <div key={i} style={{position:"absolute",left:`calc(${left}%)`,fontSize:"10px",fontWeight:600,color:P.muted,letterSpacing:"0.05em",textTransform:"uppercase",whiteSpace:"nowrap"}}>
+            return <div key={i} style={{position:"absolute",left:left+"%",fontSize:"10px",fontWeight:600,color:P.muted,letterSpacing:"0.05em",textTransform:"uppercase",whiteSpace:"nowrap"}}>
               {m.toLocaleDateString("pt-BR",{month:"short",year:"2-digit"})}
             </div>;
           })}
         </div>
-        {tasks.map((task)=>{
+        {tasks.map(task=>{
           const start=new Date(task.inicio), end=new Date(task.fim);
           const valid=!isNaN(start)&&!isNaN(end);
           const left=valid?((start-minDate)/(1000*60*60*24))/totalDays*100:0;
@@ -155,12 +152,11 @@ const GanttChart = ({tasks}) => {
   );
 };
 
-// Reusable issue table
-const IssueTable = ({issues, isEditor, onAdd, onEdit, onDelete, filterCat}) => {
+const IssueTable = ({issues, allIssues, isEditor, onAdd, onEdit, onDelete, onMove, filterCat}) => {
   const [search,setSearch] = useState("");
   const [filterStatus,setFilter] = useState("Todos");
   const [showNew,setShowNew] = useState(false);
-  const [newIssue,setNewIssue] = useState({...emptyIssue, categoria: filterCat||"Arquitetura"});
+  const [newIssue,setNewIssue] = useState({...emptyIssue,categoria:filterCat||"Arquitetura"});
   const [editingId,setEditingId] = useState(null);
   const [editData,setEditData] = useState({});
 
@@ -194,7 +190,7 @@ const IssueTable = ({issues, isEditor, onAdd, onEdit, onDelete, filterCat}) => {
           <tbody>
             {isEditor&&showNew&&(
               <tr style={{borderBottom:"1px solid "+P.border,background:P.verde+"08"}}>
-                <td style={{padding:"8px 12px",color:P.muted}}>#{String(issues.length+1).padStart(2,"0")}</td>
+                <td style={{padding:"8px 12px",color:P.muted}}>#{String(allIssues.length+1).padStart(2,"0")}</td>
                 {[
                   filterCat
                     ? <span style={{padding:"3px 10px",borderRadius:"6px",fontSize:"11px",fontWeight:700,background:CAT_COLORS[filterCat]+"22",color:CAT_COLORS[filterCat]}}>{filterCat}</span>
@@ -215,6 +211,8 @@ const IssueTable = ({issues, isEditor, onAdd, onEdit, onDelete, filterCat}) => {
             )}
             {filtered.map((issue,idx)=>{
               const isEdit=isEditor&&editingId===issue.id;
+              // find global index for move
+              const globalIdx = allIssues.findIndex(i=>i.id===issue.id);
               return (
                 <tr key={issue.id} style={{borderBottom:"1px solid "+P.border,borderLeft:"3px solid "+(STATUS_COLORS[issue.status]?.dot||P.border),background:idx%2===0?P.surface:P.bg}}>
                   <td style={{padding:"12px",color:P.muted,fontWeight:600,whiteSpace:"nowrap"}}>#{String(idx+1).padStart(2,"0")}</td>
@@ -247,7 +245,9 @@ const IssueTable = ({issues, isEditor, onAdd, onEdit, onDelete, filterCat}) => {
                       <td style={{padding:"12px"}}><StatusPill s={issue.status}/></td>
                       <td style={{padding:"12px",color:P.muted,whiteSpace:"nowrap"}}>{fmtDate(issue.dueDate)}</td>
                       <td style={{padding:"12px",color:P.muted,maxWidth:"180px"}}>{issue.acao}</td>
-                      {isEditor&&<td style={{padding:"12px"}}><div style={{display:"flex",gap:"8px"}}>
+                      {isEditor&&<td style={{padding:"12px"}}><div style={{display:"flex",gap:"4px",alignItems:"center"}}>
+                        <button onClick={()=>onMove(issue.id,"up")}   title="Mover para cima"  style={{background:"none",border:"none",cursor:globalIdx===0?"not-allowed":"pointer",color:globalIdx===0?P.cinza:P.muted,fontSize:"13px",lineHeight:1}}>▲</button>
+                        <button onClick={()=>onMove(issue.id,"down")} title="Mover para baixo" style={{background:"none",border:"none",cursor:globalIdx===allIssues.length-1?"not-allowed":"pointer",color:globalIdx===allIssues.length-1?P.cinza:P.muted,fontSize:"13px",lineHeight:1}}>▼</button>
                         <button onClick={()=>{setEditingId(issue.id);setEditData({...issue});}} style={{background:"none",border:"none",cursor:"pointer",color:P.muted}}>✏️</button>
                         <button onClick={()=>onDelete(issue.id)} style={{background:"none",border:"none",cursor:"pointer",color:P.coral}}>🗑</button>
                       </div></td>}
@@ -320,6 +320,15 @@ function App() {
   const addIssue    = (issue) => { setIssues(p=>[...p,issue]); flash(); };
   const editIssue   = (data)  => { setIssues(p=>p.map(i=>i.id===data.id?data:i)); flash(); };
   const deleteIssue = (id)    => { setIssues(p=>p.filter(i=>i.id!==id)); flash(); };
+  const moveIssue   = (id, dir) => {
+    setIssues(p=>{
+      const idx=p.findIndex(i=>i.id===id); if(idx===-1) return p;
+      if(dir==="up"&&idx===0) return p;
+      if(dir==="down"&&idx===p.length-1) return p;
+      const arr=[...p], swap=dir==="up"?idx-1:idx+1;
+      [arr[idx],arr[swap]]=[arr[swap],arr[idx]]; return arr;
+    }); flash();
+  };
   const addMilestone = ()=>{ const m={id:Date.now(),name:"Novo Marco",date:new Date().toISOString().split("T")[0]}; setMilestones(p=>[...p,m]); setEditingMilestone(m.id); };
   const addCron    = ()=>{ setCronograma(p=>[...p,{...newCron,id:Date.now()}]); setNewCron(emptyCron); setShowNewCron(false); flash(); };
   const deleteCron = id=>{ setCronograma(p=>p.filter(t=>t.id!==id)); flash(); };
@@ -332,14 +341,12 @@ function App() {
     border:"1.5px solid "+(active?"#fff":"transparent"),whiteSpace:"nowrap",
   });
 
-  // ── LOADING ──
   if(!ready) return (
     <div style={{background:"linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)",minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center"}}>
       <div style={{color:"#ffffff88",fontSize:"14px"}}>Conectando…</div>
     </div>
   );
 
-  // ── LOGIN ──
   if(!loggedIn) return (
     <div style={{background:"linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)",minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:"24px"}}>
       <div style={{width:"100%",maxWidth:"420px"}}>
@@ -355,12 +362,8 @@ function App() {
           <div style={{color:"#fff",fontWeight:700,fontSize:"18px",marginBottom:"8px",textAlign:"center"}}>Bem-vinda! 👋</div>
           <div style={{color:"#ffffff88",fontSize:"13px",textAlign:"center",marginBottom:"24px"}}>Selecione seu tipo de acesso</div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",marginBottom:"16px"}}>
-            <button onClick={()=>{setLoginMode("visitor");setLoginError(false);setLoginPass("");}} style={{padding:"12px",borderRadius:"10px",border:"2px solid "+(loginMode==="visitor"?P.verde:"#ffffff22"),background:loginMode==="visitor"?P.verde+"22":"transparent",color:loginMode==="visitor"?P.verde:"#ffffff88",fontWeight:600,fontSize:"13px",cursor:"pointer"}}>
-              👁 Visitante
-            </button>
-            <button onClick={()=>{setLoginMode("editor");setLoginError(false);setLoginPass("");}} style={{padding:"12px",borderRadius:"10px",border:"2px solid "+(loginMode==="editor"?P.coral:"#ffffff22"),background:loginMode==="editor"?P.coral+"22":"transparent",color:loginMode==="editor"?P.coral:"#ffffff88",fontWeight:600,fontSize:"13px",cursor:"pointer"}}>
-              ✏️ Editor
-            </button>
+            <button onClick={()=>{setLoginMode("visitor");setLoginError(false);setLoginPass("");}} style={{padding:"12px",borderRadius:"10px",border:"2px solid "+(loginMode==="visitor"?P.verde:"#ffffff22"),background:loginMode==="visitor"?P.verde+"22":"transparent",color:loginMode==="visitor"?P.verde:"#ffffff88",fontWeight:600,fontSize:"13px",cursor:"pointer"}}>👁 Visitante</button>
+            <button onClick={()=>{setLoginMode("editor");setLoginError(false);setLoginPass("");}} style={{padding:"12px",borderRadius:"10px",border:"2px solid "+(loginMode==="editor"?P.coral:"#ffffff22"),background:loginMode==="editor"?P.coral+"22":"transparent",color:loginMode==="editor"?P.coral:"#ffffff88",fontWeight:600,fontSize:"13px",cursor:"pointer"}}>✏️ Editor</button>
           </div>
           <div style={{color:"#ffffff55",fontSize:"11px",textAlign:"center",marginBottom:"16px"}}>
             {loginMode==="visitor"?"Acesso somente leitura para a equipe":"Acesso completo com edição"}
@@ -368,16 +371,13 @@ function App() {
           <input type="password" value={loginPass} onChange={e=>{setLoginPass(e.target.value);setLoginError(false);}} onKeyDown={e=>e.key==="Enter"&&handleLogin()} placeholder="Digite a senha"
             style={{width:"100%",background:"#ffffff0d",border:"1px solid "+(loginError?"#ef4444":"#ffffff22"),borderRadius:"10px",padding:"12px 16px",color:"#fff",fontSize:"14px",outline:"none",marginBottom:"8px"}}/>
           {loginError&&<p style={{color:"#ef4444",fontSize:"12px",margin:"0 0 12px",textAlign:"center"}}>Senha incorreta.</p>}
-          <button onClick={handleLogin} style={{width:"100%",background:"linear-gradient(120deg,"+P.coral+","+P.laranja+")",border:"none",color:"#fff",borderRadius:"10px",padding:"13px",fontSize:"14px",fontWeight:700,cursor:"pointer",marginTop:"8px"}}>
-            Entrar →
-          </button>
+          <button onClick={handleLogin} style={{width:"100%",background:"linear-gradient(120deg,"+P.coral+","+P.laranja+")",border:"none",color:"#fff",borderRadius:"10px",padding:"13px",fontSize:"14px",fontWeight:700,cursor:"pointer",marginTop:"8px"}}>Entrar →</button>
         </div>
         <div style={{textAlign:"center",marginTop:"20px",color:"#ffffff33",fontSize:"11px"}}>Sports & Wellness Movement 2026 · Movmt</div>
       </div>
     </div>
   );
 
-  // ── MAIN APP ──
   return (
     <div style={{background:P.bg,minHeight:"100vh",padding:"24px"}}>
 
@@ -393,10 +393,10 @@ function App() {
             <span style={{color:"#ffffffcc",fontSize:"12px",fontWeight:600}}>V</span>
             <input value={versionNum} onChange={e=>isEditor&&setVersionNum(e.target.value.replace(/\D/g,""))} readOnly={!isEditor} style={{background:"transparent",border:"none",color:"#fff",fontSize:"12px",fontWeight:600,width:"24px",outline:"none"}} maxLength={2}/>
           </div>
-          <button onClick={()=>setTab("tracker")}    style={btnStyle(tab==="tracker")}>Issues</button>
-          <button onClick={()=>setTab("cronograma")}  style={btnStyle(tab==="cronograma")}>Cronograma</button>
-          <button onClick={()=>setTab("dashboard")}   style={btnStyle(tab==="dashboard")}>Dashboard</button>
-          <button onClick={()=>setLoggedIn(false)} style={{...btnStyle(false),marginLeft:"4px"}}>🚪 Sair</button>
+          <button onClick={()=>setTab("tracker")}    style={btnStyle(tab==="tracker"||ISSUE_CATS.includes(tab))}>Issues</button>
+          <button onClick={()=>setTab("cronograma")} style={btnStyle(tab==="cronograma")}>Cronograma</button>
+          <button onClick={()=>setTab("dashboard")}  style={btnStyle(tab==="dashboard")}>Dashboard</button>
+          <button onClick={()=>setLoggedIn(false)}   style={{...btnStyle(false),marginLeft:"4px"}}>🚪 Sair</button>
         </div>
       </div>
 
@@ -420,7 +420,7 @@ function App() {
       </div>
 
       {/* SUMMARY CARDS */}
-      <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:"10px",marginBottom:"20px"}}>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(6,1fr)",gap:"10px",marginBottom:"16px"}}>
         {[
           {label:"TOTAL ISSUES",value:counts.total,color:P.text,accent:"#1a1a1a"},
           {label:"AT RISK",value:counts["At Risk"],color:P.coral,accent:P.coral,pct:counts.total?Math.round(counts["At Risk"]/counts.total*100):0},
@@ -437,36 +437,29 @@ function App() {
         ))}
       </div>
 
-      {/* CATEGORY BAR — aparece só nas abas de issues */}
+      {/* CATEGORY BAR */}
       {(tab==="tracker"||ISSUE_CATS.includes(tab))&&(
         <div style={{background:"linear-gradient(120deg,#1a1a2e,#0f3460)",borderRadius:"10px",padding:"12px 20px",display:"flex",alignItems:"center",gap:"8px",marginBottom:"16px",flexWrap:"wrap"}}>
           <span style={{color:"#ffffff88",fontSize:"11px",fontWeight:600,letterSpacing:"0.06em",marginRight:"4px"}}>CATEGORIA</span>
-          <button onClick={()=>setTab("tracker")} style={{padding:"6px 16px",borderRadius:"20px",fontSize:"12px",fontWeight:600,cursor:"pointer",background:tab==="tracker"?"#fff":"#ffffff22",color:tab==="tracker"?P.text:"#ffffffaa",border:"none"}}>
-            Todos
-          </button>
+          <button onClick={()=>setTab("tracker")} style={{padding:"6px 16px",borderRadius:"20px",fontSize:"12px",fontWeight:600,cursor:"pointer",background:tab==="tracker"?"#fff":"#ffffff22",color:tab==="tracker"?P.text:"#ffffffaa",border:"none"}}>Todos</button>
           {ISSUE_CATS.map(c=>(
-            <button key={c} onClick={()=>setTab(c)} style={{padding:"6px 16px",borderRadius:"20px",fontSize:"12px",fontWeight:600,cursor:"pointer",background:tab===c?CAT_COLORS[c]:"#ffffff22",color:"#fff",border:tab===c?"none":"1px solid #ffffff22"}}>
-              {c}
-            </button>
+            <button key={c} onClick={()=>setTab(c)} style={{padding:"6px 16px",borderRadius:"20px",fontSize:"12px",fontWeight:600,cursor:"pointer",background:tab===c?CAT_COLORS[c]:"#ffffff22",color:"#fff",border:tab===c?"none":"1px solid #ffffff22"}}>{c}</button>
           ))}
         </div>
       )}
 
-      {/* ISSUES - TODOS */}
-      {tab==="tracker"&&(
-        <IssueTable issues={issues} isEditor={isEditor} onAdd={addIssue} onEdit={editIssue} onDelete={deleteIssue} filterCat={null}/>
-      )}
-
-      {/* ISSUES - POR CATEGORIA */}
-      {ISSUE_CATS.includes(tab)&&(
-        <div>
-          <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"16px"}}>
-            <div style={{width:"12px",height:"12px",borderRadius:"50%",background:CAT_COLORS[tab]||P.verde}}/>
-            <span style={{fontWeight:700,fontSize:"16px",color:P.text}}>{tab}</span>
-            <span style={{color:P.muted,fontSize:"13px"}}>— {issues.filter(i=>i.categoria===tab).length} issues</span>
-          </div>
-          <IssueTable issues={issues} isEditor={isEditor} onAdd={addIssue} onEdit={editIssue} onDelete={deleteIssue} filterCat={tab}/>
-        </div>
+      {/* ISSUES */}
+      {(tab==="tracker"||ISSUE_CATS.includes(tab))&&(
+        <IssueTable
+          issues={issues}
+          allIssues={issues}
+          isEditor={isEditor}
+          onAdd={addIssue}
+          onEdit={editIssue}
+          onDelete={deleteIssue}
+          onMove={moveIssue}
+          filterCat={ISSUE_CATS.includes(tab)?tab:null}
+        />
       )}
 
       {/* CRONOGRAMA */}
